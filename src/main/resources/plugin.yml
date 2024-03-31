@@ -2,3 +2,11 @@ name: FarmweltPlugin
 version: '${project.version}'
 main: de.codingtt.farmweltplugin.Main
 api-version: '1.20'
+author: CodingTT
+description: Farmwelt Plugin by CodingTT
+website: 'https://codingtt.de'
+depend: ['Multiverse-Core']
+commands:
+    farmwelt:
+        aliases:
+            - farmworld
