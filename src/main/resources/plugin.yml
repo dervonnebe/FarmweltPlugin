@@ -1,0 +1,4 @@
+name: FarmweltPlugin
+version: '${project.version}'
+main: de.codingtt.farmweltplugin.Main
+api-version: '1.20'
