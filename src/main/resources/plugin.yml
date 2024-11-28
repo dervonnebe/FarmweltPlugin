@@ -1,12 +1,14 @@
 name: FarmweltPlugin
 version: '${project.version}'
 main: de.codingtt.farmweltplugin.Main
-api-version: '1.20'
-author: CodingTT
-description: Farmwelt Plugin by CodingTT
-website: 'https://codingtt.de'
+api-version: '1.16'
+author: dervonnebe
+description: Ein leistungsstarkes Farmwelt-Plugin mit automatischen Resets
+website: 'https://fixiteasy.shop'
 depend: ['Multiverse-Core']
 commands:
     farmwelt:
         aliases:
             - farmworld
+        description: Hauptbefehl für das FarmweltPlugin
+        usage: /farmwelt [reset|reload]
