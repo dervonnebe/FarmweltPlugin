@@ -10,42 +10,79 @@ import org.bukkit.entity.Player;
 import java.util.Random;
 
 public class WorldUtils {
-    public MultiverseCore core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
-    private final Main plugin = Main.getInstance();
+    private final Main plugin;
+    private final MultiverseCore core;
+
+    public WorldUtils(Main plugin) {
+        this.plugin = plugin;
+        this.core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
+    }
 
     public void createWorld(String worldName, World.Environment environment) {
         if (worldExists(worldName)) {
-            System.out.println("World already exists");
+            plugin.getLogger().info("World already exists");
             return;
         }
-        core.getMVWorldManager().addWorld(worldName, environment, null, null, null, null);
-        loadWorld(worldName);
+
+        try {
+            boolean success = core.getMVWorldManager().addWorld(
+                worldName,
+                environment,
+                null, // Generator
+                World.Environment.NORMAL.toString(),
+                false, // generateStructures
+                null  // Generator Settings
+            );
+
+            if (success) {
+                plugin.getLogger().info("World created successfully: " + worldName);
+                loadWorld(worldName);
+            } else {
+                plugin.getLogger().warning("Failed to create world: " + worldName);
+            }
+        } catch (Exception e) {
+            plugin.getLogger().severe("Error creating world: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void deleteWorld(String worldName) {
         if (worldExists(worldName)) {
             unloadWorld(worldName);
             core.getMVWorldManager().deleteWorld(worldName);
+            plugin.getLogger().info("World deleted: " + worldName);
         } else {
-            System.out.println("World does not exist");
+            plugin.getLogger().warning("World does not exist: " + worldName);
         }
     }
 
     public void resetWorld(String worldName) {
-        if (worldExists(worldName)) {
-            plugin.getLogger().info("Starting reset of world: " + worldName);
-            
-            try {
-                unloadWorld(worldName);
-                core.getMVWorldManager().deleteWorld(worldName);
-                createWorld(worldName, World.Environment.NORMAL);
-                plugin.getLogger().info("World reset completed successfully: " + worldName);
-            } catch (Exception e) {
-                plugin.getLogger().severe("Error during world reset: " + e.getMessage());
-                e.printStackTrace();
-            }
-        } else {
-            plugin.getLogger().warning("Cannot reset world - World does not exist: " + worldName);
+        if (!worldExists(worldName)) {
+            plugin.getLogger().warning("Cannot reset - World does not exist: " + worldName);
+            return;
+        }
+
+        plugin.getLogger().info("Starting world reset: " + worldName);
+        
+        // Teleportiere alle Spieler aus der Welt
+        World world = Bukkit.getWorld(worldName);
+        if (world != null) {
+            World defaultWorld = Bukkit.getWorlds().get(0);
+            world.getPlayers().forEach(player -> {
+                player.teleport(defaultWorld.getSpawnLocation());
+                player.sendMessage(plugin.getColoredString("prefix") + "§cDie Farmwelt wird zurückgesetzt!");
+            });
+        }
+
+        // Direkt löschen und neu erstellen
+        try {
+            unloadWorld(worldName);
+            core.getMVWorldManager().deleteWorld(worldName, true); // true für schnelleres Löschen
+            createWorld(worldName, World.Environment.NORMAL);
+            plugin.getLogger().info("World reset completed: " + worldName);
+        } catch (Exception e) {
+            plugin.getLogger().severe("Error during world reset: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -54,7 +91,16 @@ public class WorldUtils {
     }
 
     public void unloadWorld(String worldName) {
-        core.getMVWorldManager().unloadWorld(worldName);
+        if (!worldExists(worldName)) {
+            return;
+        }
+
+        try {
+            core.getMVWorldManager().unloadWorld(worldName, true); // true für save
+            plugin.getLogger().info("World unloaded: " + worldName);
+        } catch (Exception e) {
+            plugin.getLogger().severe("Error unloading world: " + e.getMessage());
+        }
     }
 
     public boolean worldExists(String worldName) {
@@ -64,16 +110,15 @@ public class WorldUtils {
     public void teleportToWorld(Player player, String worldName) {
         if (worldExists(worldName)) {
             World world = core.getMVWorldManager().getMVWorld(worldName).getSpawnLocation().getWorld();
-            Location spawnLocation = world.getSpawnLocation();
-
             Random random = new Random();
-            int maxDistance = Main.getInstance().getConfig().getInt("random-teleport-distance");
+            int maxDistance = plugin.getConfig().getInt("random-teleport-distance", 1000);
             int x = random.nextInt(maxDistance * 2) - maxDistance;
             int z = random.nextInt(maxDistance * 2) - maxDistance;
             int y = world.getHighestBlockYAt(x, z);
 
-            Location randomLocation = new Location(world, x, y, z);
+            Location randomLocation = new Location(world, x, y + 1, z);
             player.teleport(randomLocation);
+            plugin.getLogger().info("Teleported player " + player.getName() + " to " + worldName);
         }
     }
 }

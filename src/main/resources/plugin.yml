@@ -12,3 +12,11 @@ commands:
             - farmworld
         description: Hauptbefehl für das FarmweltPlugin
         usage: /farmwelt [reset|reload]
+
+permissions:
+    farmwelt.use:
+        description: Erlaubt das Betreten der Farmwelt
+        default: true
+    farmwelt.admin:
+        description: Erlaubt das Zurücksetzen der Farmwelt
+        default: op
