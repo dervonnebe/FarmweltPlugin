@@ -5,6 +5,7 @@ import de.codingtt.farmweltplugin.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
 
 import java.util.Random;
@@ -29,7 +30,7 @@ public class WorldUtils {
                 worldName,
                 environment,
                 null, // Generator
-                World.Environment.NORMAL.toString(),
+                    WorldType.valueOf(World.Environment.NORMAL.toString()),
                 false, // generateStructures
                 null  // Generator Settings
             );
