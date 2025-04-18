@@ -187,7 +187,6 @@ public class WorldUtils {
             
             Random random = new Random();
             
-            // Individuelle Teleport-Distanz je nach Welt
             int maxDistance;
             if (worldName.equals(plugin.getWorldName())) {
                 maxDistance = plugin.getConfig().getInt("farmwelt-settings.teleport-distance", 
@@ -204,8 +203,6 @@ public class WorldUtils {
             
             World.Environment environment = world.getEnvironment();
             if (environment == World.Environment.NETHER && worldName.equals(plugin.getNetherWorldName())) {
-                // Für den Nether stellen wir sicher, dass die maximale Distanz nicht zu groß ist,
-                // aber nur wenn keine spezifische Einstellung für den Nether gesetzt wurde
                 if (!plugin.getConfig().contains("nether-world-settings.teleport-distance")) {
                     maxDistance = Math.min(maxDistance, 500);
                 }
