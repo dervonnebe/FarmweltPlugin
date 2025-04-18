@@ -30,13 +30,15 @@ public class WorldUtils {
                 worldName,
                 environment,
                 null, // Generator
-                    WorldType.valueOf(World.Environment.NORMAL.toString()),
-                false, // generateStructures
+                    environment == World.Environment.NORMAL ? WorldType.NORMAL : 
+                    environment == World.Environment.NETHER ? WorldType.NORMAL : 
+                    WorldType.NORMAL,
+                true, // generateStructures
                 null  // Generator Settings
             );
 
             if (success) {
-                plugin.getLogger().info("World created successfully: " + worldName);
+                plugin.getLogger().info("World created successfully: " + worldName + " (" + environment + ")");
                 loadWorld(worldName);
             } else {
                 plugin.getLogger().warning("Failed to create world: " + worldName);
@@ -75,10 +77,17 @@ public class WorldUtils {
         }
 
         try {
+            // Bestimme die Umgebung vor dem Löschen
+            World.Environment environment = World.Environment.NORMAL;
+            if (core.getMVWorldManager().isMVWorld(worldName)) {
+                environment = core.getMVWorldManager().getMVWorld(worldName).getEnvironment();
+            }
+            
             unloadWorld(worldName);
             core.getMVWorldManager().deleteWorld(worldName, true);
-            createWorld(worldName, World.Environment.NORMAL);
+            createWorld(worldName, environment);
             plugin.getLogger().info("World reset completed: " + worldName);
+            plugin.updateLastResetTime(worldName);
         } catch (Exception e) {
             plugin.getLogger().severe("Error during world reset: " + e.getMessage());
             e.printStackTrace();
@@ -111,13 +120,52 @@ public class WorldUtils {
             World world = core.getMVWorldManager().getMVWorld(worldName).getSpawnLocation().getWorld();
             Random random = new Random();
             int maxDistance = plugin.getConfig().getInt("random-teleport-distance", 1000);
+            
+            // Für Nether und End weniger maximale Distanz verwenden
+            World.Environment environment = world.getEnvironment();
+            if (environment == World.Environment.NETHER) {
+                maxDistance = Math.min(maxDistance, 500); // Nether ist kleiner
+            }
+            
             int x = random.nextInt(maxDistance * 2) - maxDistance;
             int z = random.nextInt(maxDistance * 2) - maxDistance;
-            int y = world.getHighestBlockYAt(x, z);
+            int y;
+            
+            if (environment == World.Environment.NETHER) {
+                y = getSafeYInNether(world, x, z);
+            } else if (environment == World.Environment.THE_END) {
+                y = getSafeYInEnd(world, x, z);
+            } else {
+                y = world.getHighestBlockYAt(x, z);
+            }
 
             Location randomLocation = new Location(world, x, y + 1, z);
             player.teleport(randomLocation);
             plugin.getLogger().info("Teleported player " + player.getName() + " to " + worldName);
         }
+    }
+    
+    private int getSafeYInNether(World world, int x, int z) {
+        // Suche einen sicheren Ort im Nether, nicht in der Lava
+        for (int y = 31; y < 100; y++) {
+            if (world.getBlockAt(x, y, z).isEmpty() && 
+                world.getBlockAt(x, y + 1, z).isEmpty() && 
+                !world.getBlockAt(x, y - 1, z).isEmpty()) {
+                return y;
+            }
+        }
+        return 64; // Fallback
+    }
+    
+    private int getSafeYInEnd(World world, int x, int z) {
+        // Im End ist es einfacher einen sicheren Ort zu finden
+        for (int y = 50; y < 100; y++) {
+            if (world.getBlockAt(x, y, z).isEmpty() && 
+                world.getBlockAt(x, y + 1, z).isEmpty() && 
+                !world.getBlockAt(x, y - 1, z).isEmpty()) {
+                return y;
+            }
+        }
+        return 64; // Fallback
     }
 }

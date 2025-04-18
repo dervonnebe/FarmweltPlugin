@@ -28,17 +28,43 @@ public class ScheduledReset extends BukkitRunnable {
             Bukkit.broadcastMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("reset-announcement"));
             
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                if (worldUtils.worldExists(plugin.getWorldName())) {
-                    Bukkit.getWorld(plugin.getWorldName()).getPlayers().forEach(player -> 
-                        player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation())
-                    );
-                    
-                    worldUtils.resetWorld(plugin.getWorldName());
-                    Bukkit.broadcastMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("reset-complete"));
-                    lastReset = now;
-                }
+                resetAllFarmworlds();
             }, 6000L);
         }
+    }
+    
+    private void resetAllFarmworlds() {
+        // Reset normale Farmwelt
+        if (worldUtils.worldExists(plugin.getWorldName())) {
+            Bukkit.getWorld(plugin.getWorldName()).getPlayers().forEach(player -> 
+                player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation())
+            );
+            
+            worldUtils.resetWorld(plugin.getWorldName());
+        }
+        
+        // Reset Nether Farmwelt wenn aktiviert
+        if (plugin.getConfig().getBoolean("menu.nether-world.enabled", false) && 
+                worldUtils.worldExists(plugin.getNetherWorldName())) {
+            Bukkit.getWorld(plugin.getNetherWorldName()).getPlayers().forEach(player -> 
+                player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation())
+            );
+            
+            worldUtils.resetWorld(plugin.getNetherWorldName());
+        }
+        
+        // Reset End Farmwelt wenn aktiviert
+        if (plugin.getConfig().getBoolean("menu.end-world.enabled", false) && 
+                worldUtils.worldExists(plugin.getEndWorldName())) {
+            Bukkit.getWorld(plugin.getEndWorldName()).getPlayers().forEach(player -> 
+                player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation())
+            );
+            
+            worldUtils.resetWorld(plugin.getEndWorldName());
+        }
+        
+        Bukkit.broadcastMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("reset-complete"));
+        lastReset = LocalDateTime.now(ZoneId.of(plugin.getConfig().getString("reset-schedule.timezone", "Europe/Berlin")));
     }
 
     private boolean shouldReset(LocalDateTime now) {

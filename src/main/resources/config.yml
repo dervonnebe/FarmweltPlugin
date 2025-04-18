@@ -2,6 +2,8 @@
 
 language: "de" # Available languages: de, en
 farmwelt-world: "farmwelt" # World name for the farmworld
+nether-farmwelt-world: "farmwelt_nether" # World name for the nether farmworld
+end-farmwelt-world: "farmwelt_end" # World name for the end farmworld
 random-teleport-distance: 1000 # Maximum distance from spawn for random teleport
 
 default-permission: "farmwelt.use" # Permission for /farmwelt
@@ -14,3 +16,17 @@ reset-schedule:
   monthly: false
   day-of-week: 1 # 1 (Monday) to 7 (Sunday)
   day-of-month: 1 # 1 to 31
+
+# Menu configuration
+menu:
+  normal-world:
+    material: "GRASS_BLOCK"
+    name: "&aFarmwelt"
+  nether-world:
+    enabled: false
+    material: "NETHERRACK"
+    name: "&cNether Farmwelt"
+  end-world:
+    enabled: false
+    material: "END_STONE"
+    name: "&5End Farmwelt"
