@@ -20,6 +20,8 @@ reset-complete: "&aThe farmworld has been reset!"
 reset-warning: "&cThe farmworld is being reset!"
 command-player-only: "&cThis command can only be executed by players!"
 invalid-world-type: "&cUnknown world type. Use normal, nether or end."
+rotating-seed-active: "&aA random seed was used for the farmworld: &e%seed%"
+rotating-seed-not-found: "&cNo seeds found in configuration. Using default generation."
 
 # Menu strings
 menu-title: "§6§lFarmworld Selection"

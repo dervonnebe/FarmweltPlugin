@@ -20,6 +20,8 @@ reset-complete: "&aDie Farmwelt wurde zurückgesetzt!"
 reset-warning: "&cDie Farmwelt wird zurückgesetzt!"
 command-player-only: "&cDieser Befehl kann nur von Spielern ausgeführt werden!"
 invalid-world-type: "&cUnbekannter Welttyp. Benutze normal, nether oder end."
+rotating-seed-active: "&aEin zufälliger Seed wurde für die Farmwelt verwendet: &e%seed%"
+rotating-seed-not-found: "&cKeine Seeds in der Konfiguration gefunden. Standard-Generierung wird verwendet."
 
 # Menu strings
 menu-title: "§6§lFarmwelt-Auswahl"

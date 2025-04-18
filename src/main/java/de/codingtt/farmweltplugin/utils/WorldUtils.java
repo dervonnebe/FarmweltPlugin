@@ -5,14 +5,17 @@ import de.codingtt.farmweltplugin.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Random;
 
 public class WorldUtils {
     private final Main plugin;
     private final MultiverseCore core;
+    private final Random random = new Random();
 
     public WorldUtils(Main plugin) {
         this.plugin = plugin;
@@ -26,16 +29,69 @@ public class WorldUtils {
         }
 
         try {
-            boolean success = core.getMVWorldManager().addWorld(
-                worldName,
-                environment,
-                null, // Generator
+            // Prüfe, ob rotierende Seeds aktiviert sind
+            boolean useRotatingSeeds = plugin.getConfig().getBoolean("rotating-seeds.enabled", false);
+            Long seed = null;
+            
+            if (useRotatingSeeds) {
+                // Bestimme welche Seed-Liste verwendet werden soll
+                List<Long> seedList;
+                if (environment == World.Environment.NORMAL) {
+                    seedList = plugin.getConfig().getLongList("rotating-seeds.normal-world-seeds");
+                } else if (environment == World.Environment.NETHER) {
+                    seedList = plugin.getConfig().getLongList("rotating-seeds.nether-world-seeds");
+                } else { // THE_END
+                    seedList = plugin.getConfig().getLongList("rotating-seeds.end-world-seeds");
+                }
+                
+                // Wenn Seeds vorhanden sind, wähle einen zufälligen aus
+                if (seedList != null && !seedList.isEmpty()) {
+                    seed = seedList.get(random.nextInt(seedList.size()));
+                    plugin.getLogger().info("Using rotating seed: " + seed + " for world: " + worldName);
+                }
+            }
+
+            // Erstelle die Welt mit dem Seed, falls angegeben
+            boolean success;
+            if (seed != null) {
+                WorldCreator worldCreator = new WorldCreator(worldName)
+                    .environment(environment)
+                    .type(environment == World.Environment.NORMAL ? WorldType.NORMAL : 
+                          environment == World.Environment.NETHER ? WorldType.NORMAL : 
+                          WorldType.NORMAL)
+                    .generateStructures(true)
+                    .seed(seed);
+                
+                World world = worldCreator.createWorld();
+                success = world != null;
+                
+                if (success) {
+                    // Registriere die Welt bei Multiverse
+                    core.getMVWorldManager().addWorld(
+                        worldName,
+                        environment,
+                        null,
+                        environment == World.Environment.NORMAL ? WorldType.NORMAL : 
+                        environment == World.Environment.NETHER ? WorldType.NORMAL : 
+                        WorldType.NORMAL,
+                        true,
+                        null,
+                        true
+                    );
+                }
+            } else {
+                // Standard Multiverse-Erstellung ohne Seed
+                success = core.getMVWorldManager().addWorld(
+                    worldName,
+                    environment,
+                    null, // Generator
                     environment == World.Environment.NORMAL ? WorldType.NORMAL : 
                     environment == World.Environment.NETHER ? WorldType.NORMAL : 
                     WorldType.NORMAL,
-                true, // generateStructures
-                null  // Generator Settings
-            );
+                    true, // generateStructures
+                    null  // Generator Settings
+                );
+            }
 
             if (success) {
                 plugin.getLogger().info("World created successfully: " + worldName + " (" + environment + ")");

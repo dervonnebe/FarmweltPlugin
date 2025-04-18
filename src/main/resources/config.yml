@@ -9,6 +9,18 @@ random-teleport-distance: 1000 # Maximum distance from spawn for random teleport
 default-permission: "farmwelt.use" # Permission for /farmwelt
 admin-permission: "farmwelt.admin" # Permission for /farmwelt reset
 
+# Rotating seeds
+rotating-seeds:
+  enabled: false
+  normal-world-seeds:
+    - 1234567890
+  nether-world-seeds:
+    - 1122334455
+    - 5544332211
+  end-world-seeds:
+    - 6677889900
+    - 0099887766
+
 reset-schedule:
   timezone: "Europe/Berlin" # Timezone for reset
   daily: true
