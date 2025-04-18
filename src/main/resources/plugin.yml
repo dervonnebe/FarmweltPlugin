@@ -11,6 +11,12 @@ commands:
             - farmworld
         description: Main command for the FarmweltPlugin
         usage: /farmwelt [reset|reload]
+    nether:
+        description: Teleport to the nether farmworld
+        usage: /nether
+    end:
+        description: Teleport to the end farmworld
+        usage: /end
 
 permissions:
     farmwelt.use:

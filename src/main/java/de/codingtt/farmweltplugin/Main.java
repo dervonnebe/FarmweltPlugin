@@ -1,6 +1,8 @@
 package de.codingtt.farmweltplugin;
 
 import de.codingtt.farmweltplugin.commands.FarmweltCommand;
+import de.codingtt.farmweltplugin.commands.NetherCommand;
+import de.codingtt.farmweltplugin.commands.EndCommand;
 import de.codingtt.farmweltplugin.utils.FarmweltMenu;
 import de.codingtt.farmweltplugin.utils.MenuListener;
 import de.codingtt.farmweltplugin.utils.ScheduledReset;
@@ -48,8 +50,13 @@ public final class Main extends JavaPlugin {
         // Initialisiere das FarmweltMenu
         this.farmweltMenu = new FarmweltMenu(this, worldUtils);
 
-        // bStats Metrics
-        new Metrics(this, BSTATS_PLUGIN_ID);
+        // bStats Metrics nur initialisieren, wenn in der Config aktiviert
+        if (getConfig().getBoolean("use-bstats", true)) {
+            new Metrics(this, BSTATS_PLUGIN_ID);
+            getLogger().info("bStats metrics collection enabled");
+        } else {
+            getLogger().info("bStats metrics collection disabled in config");
+        }
 
         registerCommands();
         registerEvents();
@@ -122,6 +129,12 @@ public final class Main extends JavaPlugin {
     private void registerCommands() {
         FarmweltCommand farmweltCommand = new FarmweltCommand(this, worldUtils, farmweltMenu);
         getCommand("farmwelt").setExecutor(farmweltCommand);
+        
+        // Registriere die Nether- und End-Befehle
+        NetherCommand netherCommand = new NetherCommand(this, worldUtils);
+        EndCommand endCommand = new EndCommand(this, worldUtils);
+        getCommand("nether").setExecutor(netherCommand);
+        getCommand("end").setExecutor(endCommand);
     }
 
     private void registerEvents() {

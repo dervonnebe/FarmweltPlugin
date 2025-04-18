@@ -5,6 +5,7 @@ farmwelt-world: "farmwelt" # World name for the farmworld
 nether-farmwelt-world: "farmwelt_nether" # World name for the nether farmworld
 end-farmwelt-world: "farmwelt_end" # World name for the end farmworld
 random-teleport-distance: 1000 # Maximum distance from spawn for random teleport
+use-bstats: true # Set to false to disable bStats metrics collection
 
 default-permission: "farmwelt.use" # Permission for /farmwelt
 admin-permission: "farmwelt.admin" # Permission for /farmwelt reset

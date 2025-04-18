@@ -24,7 +24,9 @@ Ein leistungsstarkes Spigot-Plugin für automatisch resettende Farmwelten. Ideal
 5. Die Konfigurationsdatei wird automatisch erstellt
 
 ## Befehle
-- `/farmwelt` - Teleportiert dich zur Farmwelt
+- `/farmwelt` - Teleportiert dich zur normalen Farmwelt
+- `/nether` - Teleportiert dich zur Nether-Farmwelt
+- `/end` - Teleportiert dich zur End-Farmwelt
 - `/farmwelt reset` - Setzt die Farmwelt zurück (Admin)
 - `/farmwelt reload` - Lädt die Konfiguration neu (Admin)
 
@@ -37,6 +39,7 @@ Ein leistungsstarkes Spigot-Plugin für automatisch resettende Farmwelten. Ideal
 prefix: "&8[&6&lFarmwelt&8]&r "
 farmwelt-world: "farmwelt"
 random-teleport-distance: 1000
+use-bstats: true # Setze auf false, um bStats zu deaktivieren
 
 # Rotierende Seeds für Farmwelten
 rotating-seeds:
@@ -65,6 +68,7 @@ day-of-month: 1 # 1 bis 31
 - `prefix`: Der Prefix für Plugin-Nachrichten
 - `farmwelt-world`: Name der Farmwelt
 - `random-teleport-distance`: Maximale Entfernung vom Spawn beim zufälligen Teleport
+- `use-bstats`: Aktiviert oder deaktiviert die bStats-Statistiksammlung
 - `rotating-seeds`: Einstellungen für rotierende Welt-Seeds
   - `enabled`: Aktiviert oder deaktiviert die Verwendung von vordefinierten Seeds
   - `normal-world-seeds`: Liste von Seeds für die normale Farmwelt
@@ -125,4 +129,9 @@ Beiträge sind willkommen! Wenn du Verbesserungen vornehmen möchtest:
 ## Statistiken
 Dieses Plugin verwendet bStats für anonyme Nutzungsstatistiken. Die Statistiken können [hier](https://bstats.org/plugin/bukkit/FarmworldPlugin/24022) eingesehen werden.
 
-Du kannst die Statistikerfassung in der bStats-Konfiguration unter `/plugins/bStats/config.yml` deaktivieren.
+Du kannst die Statistikerfassung direkt in der Plugin-Konfiguration deaktivieren, indem du den Wert `use-bstats` auf `false` setzt:
+```yaml
+use-bstats: false
+```
+
+Alternativ kannst du auch die bStats-Konfiguration unter `/plugins/bStats/config.yml` bearbeiten.
