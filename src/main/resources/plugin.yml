@@ -5,6 +5,7 @@ api-version: '1.16'
 author: dervonnebe
 description: A powerful farmworld plugin with automatic resets
 depend: ['Multiverse-Core']
+softdepend: ['PlaceholderAPI']
 commands:
     farmwelt:
         aliases:

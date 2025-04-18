@@ -31,4 +31,10 @@ menu-last-reset: "§7Letzter Reset: §e%date%"
 menu-next-reset: "§7Nächster Reset: §e%date%"
 menu-player-count: "§7Spieler online: §e%count%"
 menu-never-reset: "Nie"
-menu-no-schedule: "Nicht geplant" 
+menu-no-schedule: "Nicht geplant"
+
+# Placeholder related strings
+farmwelt-name: "Farmwelt"
+nether-farmwelt-name: "Nether-Farmwelt"
+end-farmwelt-name: "End-Farmwelt"
+reset-not-scheduled: "Nicht geplant" 

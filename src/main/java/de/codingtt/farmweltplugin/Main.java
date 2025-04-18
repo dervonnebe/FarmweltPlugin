@@ -4,6 +4,7 @@ import de.codingtt.farmweltplugin.commands.FarmweltCommand;
 import de.codingtt.farmweltplugin.commands.NetherCommand;
 import de.codingtt.farmweltplugin.commands.EndCommand;
 import de.codingtt.farmweltplugin.utils.FarmweltMenu;
+import de.codingtt.farmweltplugin.utils.FarmweltPlaceholders;
 import de.codingtt.farmweltplugin.utils.MenuListener;
 import de.codingtt.farmweltplugin.utils.ScheduledReset;
 import de.codingtt.farmweltplugin.utils.WorldUtils;
@@ -41,16 +42,12 @@ public final class Main extends JavaPlugin {
         this.language = getConfig().getString("language", "de");
         loadLanguageConfig();
         
-        // Initialisiere LastResetTimes Map
         this.lastResetTimes = new HashMap<>();
         
-        // Initialisiere WorldUtils mit Plugin-Instanz
         this.worldUtils = new WorldUtils(this);
         
-        // Initialisiere das FarmweltMenu
         this.farmweltMenu = new FarmweltMenu(this, worldUtils);
 
-        // bStats Metrics nur initialisieren, wenn in der Config aktiviert
         if (getConfig().getBoolean("use-bstats", true)) {
             new Metrics(this, BSTATS_PLUGIN_ID);
             getLogger().info("bStats metrics collection enabled");
@@ -60,9 +57,15 @@ public final class Main extends JavaPlugin {
 
         registerCommands();
         registerEvents();
+        
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new FarmweltPlaceholders(this).register();
+            getLogger().info("PlaceholderAPI found - Registering placeholders");
+        } else {
+            getLogger().info("PlaceholderAPI not found - Placeholders will not be available");
+        }
 
         Bukkit.getScheduler().runTaskLater(this, () -> {
-            // Normal Farmwelt erstellen/laden
             if (worldUtils.worldExists(getWorldName())) {
                 worldUtils.loadWorld(getWorldName());
             } else {
@@ -70,7 +73,6 @@ public final class Main extends JavaPlugin {
                 updateLastResetTime(getWorldName());
             }
             
-            // Nether Farmwelt erstellen/laden, falls aktiviert
             if (getConfig().getBoolean("menu.nether-world.enabled", false)) {
                 if (worldUtils.worldExists(getNetherWorldName())) {
                     worldUtils.loadWorld(getNetherWorldName());
@@ -80,7 +82,6 @@ public final class Main extends JavaPlugin {
                 }
             }
             
-            // End Farmwelt erstellen/laden, falls aktiviert
             if (getConfig().getBoolean("menu.end-world.enabled", false)) {
                 if (worldUtils.worldExists(getEndWorldName())) {
                     worldUtils.loadWorld(getEndWorldName());
@@ -130,7 +131,6 @@ public final class Main extends JavaPlugin {
         FarmweltCommand farmweltCommand = new FarmweltCommand(this, worldUtils, farmweltMenu);
         getCommand("farmwelt").setExecutor(farmweltCommand);
         
-        // Registriere die Nether- und End-Befehle
         NetherCommand netherCommand = new NetherCommand(this, worldUtils);
         EndCommand endCommand = new EndCommand(this, worldUtils);
         getCommand("nether").setExecutor(netherCommand);
@@ -138,7 +138,6 @@ public final class Main extends JavaPlugin {
     }
 
     private void registerEvents() {
-        // Menu Listener registrieren
         getServer().getPluginManager().registerEvents(new MenuListener(this, worldUtils), this);
     }
 
@@ -191,7 +190,6 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Entlade alle Farmwelten
         if (worldUtils.worldExists(getWorldName())) {
             worldUtils.unloadWorld(getWorldName());
         }

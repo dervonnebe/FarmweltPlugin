@@ -7,6 +7,7 @@ Ein leistungsstarkes Spigot-Plugin für automatisch resettende Farmwelten. Ideal
 - ⏰ Automatische Reset-Zeitpläne (täglich, wöchentlich oder monatlich)
 - 🎯 Zufällige Teleportation innerhalb der Farmwelt
 - 🌱 Rotierende Welt-Seeds für abwechslungsreiche Biome und Strukturen
+- 🏷️ PlaceholderAPI-Integration für Anzeige von Reset-Zeiten und Spielerzahlen
 - 🛠️ Einfache Konfiguration
 - 💻 Multiverse-Core Integration
 - 📊 bStats Integration für anonyme Nutzungsstatistiken
@@ -15,13 +16,15 @@ Ein leistungsstarkes Spigot-Plugin für automatisch resettende Farmwelten. Ideal
 - Spigot/Paper Server (1.16.5 oder höher)
 - Multiverse-Core Plugin
 - Java 8 oder höher
+- Optional: PlaceholderAPI für Placeholder-Funktionen
 
 ## Installation
 1. Lade die neueste Version des Plugins von [hier](https://github.com/dervonnebe/FarmweltPlugin/releases) herunter
 2. Platziere die .jar Datei in deinem Plugins-Ordner
 3. Stelle sicher, dass Multiverse-Core installiert ist
-4. Starte deinen Server neu
-5. Die Konfigurationsdatei wird automatisch erstellt
+4. Für Placeholder-Unterstützung installiere PlaceholderAPI
+5. Starte deinen Server neu
+6. Die Konfigurationsdatei wird automatisch erstellt
 
 ## Befehle
 - `/farmwelt` - Teleportiert dich zur normalen Farmwelt
@@ -33,6 +36,16 @@ Ein leistungsstarkes Spigot-Plugin für automatisch resettende Farmwelten. Ideal
 ## Berechtigungen
 - `farmwelt.use` - Erlaubt die Nutzung des /farmwelt Befehls
 - `farmwelt.admin` - Erlaubt die Nutzung von Admin-Befehlen
+
+## Placeholders
+Das Plugin bietet PlaceholderAPI-Integration für Anzeige von Farmwelt-Informationen:
+
+- `%farmwelt_world%` - Zeigt an, in welcher Welt sich der Spieler befindet
+- `%farmwelt_normal_next_reset%` - Zeigt an, wann der nächste Reset der normalen Farmwelt ist
+- `%farmwelt_normal_timer%` - Timer, wenn der Reset in der nächsten Stunde ist
+- `%farmwelt_normal_players%` - Anzahl der Spieler in der normalen Farmwelt
+
+Für eine vollständige Liste der verfügbaren Placeholders, siehe [PLACEHOLDERS.md](PLACEHOLDERS.md).
 
 ## Konfiguration
 ```yaml
