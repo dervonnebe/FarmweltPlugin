@@ -24,33 +24,28 @@ public class ScheduledReset extends BukkitRunnable {
     public void run() {
         LocalDateTime now = LocalDateTime.now(ZoneId.of(plugin.getConfig().getString("reset-schedule.timezone", "Europe/Berlin")));
         
-        // Prüfe ob ein Reset nötig ist
         if (shouldReset(now)) {
-            // Kündige Reset 5 Minuten vorher an
-            Bukkit.broadcastMessage(plugin.getColoredString("prefix") + "§cDie Farmwelt wird in 5 Minuten zurückgesetzt!");
+            Bukkit.broadcastMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("reset-announcement"));
             
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 if (worldUtils.worldExists(plugin.getWorldName())) {
-                    // Teleportiere alle Spieler aus der Farmwelt
                     Bukkit.getWorld(plugin.getWorldName()).getPlayers().forEach(player -> 
                         player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation())
                     );
                     
                     worldUtils.resetWorld(plugin.getWorldName());
-                    Bukkit.broadcastMessage(plugin.getColoredString("prefix") + "§aDie Farmwelt wurde zurückgesetzt!");
+                    Bukkit.broadcastMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("reset-complete"));
                     lastReset = now;
                 }
-            }, 6000L); // 5 Minuten = 6000 Ticks
+            }, 6000L);
         }
     }
 
     private boolean shouldReset(LocalDateTime now) {
-        // Verhindere mehrfache Resets am selben Tag
         if (now.toLocalDate().equals(lastReset.toLocalDate())) {
             return false;
         }
 
-        // Prüfe die Reset-Bedingungen
         if (plugin.getConfig().getBoolean("reset-schedule.daily")) {
             return now.getHour() == 0 && now.getMinute() == 0;
         } else if (plugin.getConfig().getBoolean("reset-schedule.weekly") 

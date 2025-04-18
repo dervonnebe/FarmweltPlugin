@@ -65,20 +65,18 @@ public class WorldUtils {
 
         plugin.getLogger().info("Starting world reset: " + worldName);
         
-        // Teleportiere alle Spieler aus der Welt
         World world = Bukkit.getWorld(worldName);
         if (world != null) {
             World defaultWorld = Bukkit.getWorlds().get(0);
             world.getPlayers().forEach(player -> {
                 player.teleport(defaultWorld.getSpawnLocation());
-                player.sendMessage(plugin.getColoredString("prefix") + "§cDie Farmwelt wird zurückgesetzt!");
+                player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("reset-warning"));
             });
         }
 
-        // Direkt löschen und neu erstellen
         try {
             unloadWorld(worldName);
-            core.getMVWorldManager().deleteWorld(worldName, true); // true für schnelleres Löschen
+            core.getMVWorldManager().deleteWorld(worldName, true);
             createWorld(worldName, World.Environment.NORMAL);
             plugin.getLogger().info("World reset completed: " + worldName);
         } catch (Exception e) {
@@ -97,7 +95,7 @@ public class WorldUtils {
         }
 
         try {
-            core.getMVWorldManager().unloadWorld(worldName, true); // true für save
+            core.getMVWorldManager().unloadWorld(worldName, true);
             plugin.getLogger().info("World unloaded: " + worldName);
         } catch (Exception e) {
             plugin.getLogger().severe("Error unloading world: " + e.getMessage());

@@ -3,20 +3,19 @@ version: '${project.version}'
 main: de.codingtt.farmweltplugin.Main
 api-version: '1.16'
 author: dervonnebe
-description: Ein leistungsstarkes Farmwelt-Plugin mit automatischen Resets
-website: 'https://fixiteasy.shop'
+description: A powerful farmworld plugin with automatic resets
 depend: ['Multiverse-Core']
 commands:
     farmwelt:
         aliases:
             - farmworld
-        description: Hauptbefehl für das FarmweltPlugin
+        description: Main command for the FarmweltPlugin
         usage: /farmwelt [reset|reload]
 
 permissions:
     farmwelt.use:
-        description: Erlaubt das Betreten der Farmwelt
+        description: Allows access to the farmworld
         default: true
     farmwelt.admin:
-        description: Erlaubt das Zurücksetzen der Farmwelt
+        description: Allows resetting the farmworld
         default: op

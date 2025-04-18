@@ -23,50 +23,50 @@ public class FarmweltCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(plugin.getColoredString("prefix") + "§cDieser Befehl kann nur von Spielern ausgeführt werden!");
+            sender.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("command-player-only"));
             return true;
         }
 
         Player player = (Player) sender;
 
         if (args.length == 0) {
-            if (!player.hasPermission("farmwelt.use")) {
-                player.sendMessage(plugin.getColoredString("prefix") + "§cDu hast keine Berechtigung dazu!");
+            if (!player.hasPermission(plugin.getConfig().getString("default-permission", "farmwelt.use"))) {
+                player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("no-permission"));
                 return true;
             }
 
             if (worldUtils.worldExists(plugin.getWorldName())) {
                 worldUtils.teleportToWorld(player, plugin.getWorldName());
-                player.sendMessage(plugin.getColoredString("prefix") + "§aDu wurdest zur Farmwelt teleportiert!");
+                player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("world-teleport"));
             } else {
-                player.sendMessage(plugin.getColoredString("prefix") + "§cDie Farmwelt existiert nicht!");
+                player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("no-world"));
             }
             return true;
         }
 
         if (args[0].equalsIgnoreCase("reset")) {
-            if (!player.hasPermission("farmwelt.admin")) {
-                player.sendMessage(plugin.getColoredString("prefix") + "§cDu hast keine Berechtigung dazu!");
+            if (!player.hasPermission(plugin.getConfig().getString("admin-permission", "farmwelt.admin"))) {
+                player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("no-permission"));
                 return true;
             }
 
             if (worldUtils.worldExists(plugin.getWorldName())) {
                 worldUtils.resetWorld(plugin.getWorldName());
-                player.sendMessage(plugin.getColoredString("prefix") + "§aDie Farmwelt wurde zurückgesetzt!");
+                player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("admin-reset"));
             } else {
-                player.sendMessage(plugin.getColoredString("prefix") + "§cDie Farmwelt existiert nicht!");
+                player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("no-world"));
             }
             return true;
         }
 
         if (args[0].equalsIgnoreCase("reload")) {
-            if (!player.hasPermission("farmwelt.admin")) {
-                player.sendMessage(plugin.getColoredString("prefix") + "§cDu hast keine Berechtigung dazu!");
+            if (!player.hasPermission(plugin.getConfig().getString("admin-permission", "farmwelt.admin"))) {
+                player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("no-permission"));
                 return true;
             }
 
             plugin.reloadConfig();
-            player.sendMessage(plugin.getColoredString("prefix") + "§aKonfiguration neu geladen!");
+            player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("admin-reload"));
             return true;
         }
 
@@ -78,7 +78,7 @@ public class FarmweltCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         
         if (args.length == 1) {
-            if (sender.hasPermission("farmwelt.admin")) {
+            if (sender.hasPermission(plugin.getConfig().getString("admin-permission", "farmwelt.admin"))) {
                 completions.add("reset");
                 completions.add("reload");
             }

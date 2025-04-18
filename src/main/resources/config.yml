@@ -1,30 +1,16 @@
 # Farmwelt Plugin by Dervonnebe
-# Bei Fragen, Wünschen oder Problemen schreibe mir auf Discord: Dervonnebe
 
-prefix: "&8[&6&lFarmwelt&8]&r "
-farmwelt-world: "farmwelt" # Name der Farmwelt nur wichtig falls du schon eine welt mit denm namen Farmwelt hast
-random-teleport-distance: 1000 # Maximaler Abstand zum Spawn beim Random Teleport
+language: "de" # Available languages: de, en
+farmwelt-world: "farmwelt" # World name for the farmworld
+random-teleport-distance: 1000 # Maximum distance from spawn for random teleport
 
-no-permission: "&cDu hast keine Berechtigung um diesen Command auszuführen."
-
-default-permission: "farmwelt.use" # Permission für /farmwelt fals du keine permission haben wwillst leer keine perm setzt (default-permission
-admin-permission: "farmwelt.admin" # Permission für /farmwelt reset dies ist dazu da um die Farmwelt manuel zu reseten
-
-no-player: "&cDu musst ein Spieler sein um diesen Command auszuführen."
-no-world: "&cDie Farmwelt existiert nicht."
-
-world-teleport: "&aDu wurdest in die Farmwelt teleportiert."
-already-in-world: "&cDu bist bereits in der Farmwelt."
-world-teleport-usage: "&cVerwendung: /farmwelt"
-
-admin-reset: "&aDie Farmwelt wurde zurückgesetzt."
-admin-relaod: "&aDie Config wurde neu geladen."
-admin-usage: "&cVerwendung: /farmwelt <reset|reload>"
+default-permission: "farmwelt.use" # Permission for /farmwelt
+admin-permission: "farmwelt.admin" # Permission for /farmwelt reset
 
 reset-schedule:
-  timezone: "Europe/Berlin" # Zeitzone für den Reset
+  timezone: "Europe/Berlin" # Timezone for reset
   daily: true
   weekly: false
   monthly: false
-  day-of-week: 1 # 1 (Montag) zu 7 (Sonntag)
-  day-of-month: 1 # 1 zu 31
+  day-of-week: 1 # 1 (Monday) to 7 (Sunday)
+  day-of-month: 1 # 1 to 31
