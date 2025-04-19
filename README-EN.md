@@ -13,7 +13,7 @@ The perfect solution for automatically resetting farm worlds in Minecraft
 🔄 Safe player teleport system  
 🌐 Multi-language support (German/English)  
 📊 bStats integration (optional)  
-💻 Multiverse-Core integration  
+💻 Multiverse-Core integration (optional)  
 
 ## Commands
 • `/farmwelt` - Teleports to normal farm world  
@@ -58,15 +58,18 @@ use-bstats: true # Set to false to disable bStats
 ```
 
 ## Installation
-1. Install Multiverse-Core
+1. Download the latest version from [here](https://github.com/dervonnebe/FarmweltPlugin/releases)
 2. Copy the plugin to your plugins folder
-3. Restart your server
-4. Done!
+3. For enhanced world management, install Multiverse-Core (recommended but not required)
+4. For placeholder support, install PlaceholderAPI
+5. Restart your server
+6. Done!
 
 ## ⚠️ Requirements
 • Spigot/Paper 1.16.5 or higher  
-• Multiverse-Core  
 • Java 8 or higher  
+• Optional: Multiverse-Core for enhanced world management  
+• Optional: PlaceholderAPI for placeholders  
 
 ## Statistics
 This plugin uses bStats for anonymous usage statistics.  
@@ -77,6 +80,12 @@ https://bstats.org/plugin/bukkit/FarmworldPlugin/24022
 • https://github.com/dervonnebe/FarmweltPlugin/issues
 
 ## Changelog
+
+### Version 1.1.3
+• Multiverse-Core is now optional and no longer required
+• The plugin can now operate without Multiverse-Core
+• Improved compatibility with other plugins
+• Minor bugfixes and improvements
 
 ### Version 1.1.0
 • New farm worlds: Added Nether and End

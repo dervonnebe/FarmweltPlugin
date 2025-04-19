@@ -8,7 +8,9 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
+import java.io.File;
 import java.util.List;
 import java.util.Random;
 
@@ -16,10 +18,20 @@ public class WorldUtils {
     private final Main plugin;
     private final MultiverseCore core;
     private final Random random = new Random();
+    private final boolean useMultiverse;
 
     public WorldUtils(Main plugin) {
         this.plugin = plugin;
-        this.core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
+        Plugin mvPlugin = Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
+        this.useMultiverse = mvPlugin != null;
+        
+        if (useMultiverse) {
+            this.core = (MultiverseCore) mvPlugin;
+            plugin.getLogger().info("Multiverse-Core found - Activate Multiverse-Integration");
+        } else {
+            this.core = null;
+            plugin.getLogger().info("Multiverse-Core not found - Use Bukkit World Management");
+        }
     }
 
     public void createWorld(String worldName, World.Environment environment) {
@@ -49,20 +61,23 @@ public class WorldUtils {
             }
 
             boolean success;
+            
+            WorldCreator worldCreator = new WorldCreator(worldName)
+                .environment(environment)
+                .type(environment == World.Environment.NORMAL ? WorldType.NORMAL : 
+                      environment == World.Environment.NETHER ? WorldType.NORMAL : 
+                      WorldType.NORMAL)
+                .generateStructures(true);
+                
             if (seed != null) {
-                WorldCreator worldCreator = new WorldCreator(worldName)
-                    .environment(environment)
-                    .type(environment == World.Environment.NORMAL ? WorldType.NORMAL : 
-                          environment == World.Environment.NETHER ? WorldType.NORMAL : 
-                          WorldType.NORMAL)
-                    .generateStructures(true)
-                    .seed(seed);
-                
-                World world = worldCreator.createWorld();
-                success = world != null;
-                
-                if (success) {
-                    // Registriere die Welt bei Multiverse
+                worldCreator.seed(seed);
+            }
+            
+            World world = worldCreator.createWorld();
+            success = world != null;
+            
+            if (success) {
+                if (useMultiverse) {
                     core.getMVWorldManager().addWorld(
                         worldName,
                         environment,
@@ -75,21 +90,7 @@ public class WorldUtils {
                         true
                     );
                 }
-            } else {
-                // Standard Multiverse-Erstellung ohne Seed
-                success = core.getMVWorldManager().addWorld(
-                    worldName,
-                    environment,
-                    null, // Generator
-                    environment == World.Environment.NORMAL ? WorldType.NORMAL : 
-                    environment == World.Environment.NETHER ? WorldType.NORMAL : 
-                    WorldType.NORMAL,
-                    true, // generateStructures
-                    null  // Generator Settings
-                );
-            }
-
-            if (success) {
+                
                 plugin.getLogger().info("World created successfully: " + worldName + " (" + environment + ")");
                 loadWorld(worldName);
             } else {
@@ -104,11 +105,41 @@ public class WorldUtils {
     public void deleteWorld(String worldName) {
         if (worldExists(worldName)) {
             unloadWorld(worldName);
-            core.getMVWorldManager().deleteWorld(worldName);
+            
+            if (useMultiverse) {
+                core.getMVWorldManager().deleteWorld(worldName);
+            } else {
+                World world = Bukkit.getWorld(worldName);
+                if (world != null) {
+                    Bukkit.unloadWorld(world, false);
+                }
+                
+                File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
+                if (worldFolder.exists() && worldFolder.isDirectory()) {
+                    deleteDirectory(worldFolder);
+                }
+            }
+            
             plugin.getLogger().info("World deleted: " + worldName);
         } else {
             plugin.getLogger().warning("World does not exist: " + worldName);
         }
+    }
+    
+    private boolean deleteDirectory(File directory) {
+        if (directory.exists()) {
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        deleteDirectory(file);
+                    } else {
+                        file.delete();
+                    }
+                }
+            }
+        }
+        return directory.delete();
     }
 
     public void resetWorld(String worldName) {
@@ -130,12 +161,25 @@ public class WorldUtils {
 
         try {
             World.Environment environment = World.Environment.NORMAL;
-            if (core.getMVWorldManager().isMVWorld(worldName)) {
+            
+            if (useMultiverse && core.getMVWorldManager().isMVWorld(worldName)) {
                 environment = core.getMVWorldManager().getMVWorld(worldName).getEnvironment();
+            } else if (world != null) {
+                environment = world.getEnvironment();
             }
             
             unloadWorld(worldName);
-            core.getMVWorldManager().deleteWorld(worldName, true);
+            
+            if (useMultiverse) {
+                core.getMVWorldManager().deleteWorld(worldName, true);
+            } else {
+                // Bukkit-Alternative
+                File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
+                if (worldFolder.exists() && worldFolder.isDirectory()) {
+                    deleteDirectory(worldFolder);
+                }
+            }
+            
             createWorld(worldName, environment);
             plugin.getLogger().info("World reset completed: " + worldName);
             plugin.updateLastResetTime(worldName);
@@ -146,7 +190,14 @@ public class WorldUtils {
     }
 
     public void loadWorld(String worldName) {
-        core.getMVWorldManager().loadWorld(worldName);
+        if (useMultiverse) {
+            core.getMVWorldManager().loadWorld(worldName);
+        } else {
+            // Bukkit-Alternative
+            if (Bukkit.getWorld(worldName) == null) {
+                new WorldCreator(worldName).createWorld();
+            }
+        }
     }
 
     public void unloadWorld(String worldName) {
@@ -155,7 +206,14 @@ public class WorldUtils {
         }
 
         try {
-            core.getMVWorldManager().unloadWorld(worldName, true);
+            if (useMultiverse) {
+                core.getMVWorldManager().unloadWorld(worldName, true);
+            } else {
+                World world = Bukkit.getWorld(worldName);
+                if (world != null) {
+                    Bukkit.unloadWorld(world, true);
+                }
+            }
             plugin.getLogger().info("World unloaded: " + worldName);
         } catch (Exception e) {
             plugin.getLogger().severe("Error unloading world: " + e.getMessage());
@@ -163,12 +221,36 @@ public class WorldUtils {
     }
 
     public boolean worldExists(String worldName) {
-        return core.getMVWorldManager().isMVWorld(worldName);
+        if (useMultiverse) {
+            return core.getMVWorldManager().isMVWorld(worldName);
+        } else {
+            if (Bukkit.getWorld(worldName) != null) {
+                return true;
+            }
+            
+            File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
+            return worldFolder.exists() && worldFolder.isDirectory();
+        }
     }
 
     public void teleportToWorld(Player player, String worldName) {
         if (worldExists(worldName)) {
-            World world = core.getMVWorldManager().getMVWorld(worldName).getSpawnLocation().getWorld();
+            World world;
+            
+            if (useMultiverse) {
+                world = core.getMVWorldManager().getMVWorld(worldName).getSpawnLocation().getWorld();
+            } else {
+                world = Bukkit.getWorld(worldName);
+                if (world == null) {
+                    loadWorld(worldName);
+                    world = Bukkit.getWorld(worldName);
+                }
+                
+                if (world == null) {
+                    plugin.getLogger().severe("Could not load world: " + worldName);
+                    return;
+                }
+            }
             
             boolean useRandomTp = true;
             if (worldName.equals(plugin.getWorldName())) {

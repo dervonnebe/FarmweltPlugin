@@ -9,19 +9,19 @@ Ein leistungsstarkes Spigot-Plugin für automatisch resettende Farmwelten. Ideal
 - 🌱 Rotierende Welt-Seeds für abwechslungsreiche Biome und Strukturen
 - 🏷️ PlaceholderAPI-Integration für Anzeige von Reset-Zeiten und Spielerzahlen
 - 🛠️ Einfache Konfiguration
-- 💻 Multiverse-Core Integration
+- 💻 Multiverse-Core Integration (optional)
 - 📊 bStats Integration für anonyme Nutzungsstatistiken
 
 ## Voraussetzungen
 - Spigot/Paper Server (1.16.5 oder höher)
-- Multiverse-Core Plugin
 - Java 8 oder höher
+- Optional: Multiverse-Core Plugin für erweiterte Weltenverwaltung
 - Optional: PlaceholderAPI für Placeholder-Funktionen
 
 ## Installation
 1. Lade die neueste Version des Plugins von [hier](https://github.com/dervonnebe/FarmweltPlugin/releases) herunter
 2. Platziere die .jar Datei in deinem Plugins-Ordner
-3. Stelle sicher, dass Multiverse-Core installiert ist
+3. Für erweiterte Weltenverwaltung installiere Multiverse-Core (empfohlen, aber nicht zwingend erforderlich)
 4. Für Placeholder-Unterstützung installiere PlaceholderAPI
 5. Starte deinen Server neu
 6. Die Konfigurationsdatei wird automatisch erstellt
@@ -98,9 +98,9 @@ day-of-month: 1 # 1 bis 31
 ## Häufige Probleme und Lösungen
 
 ### Die Farmwelt wird nicht erstellt
-- Überprüfe, ob Multiverse-Core korrekt installiert ist
 - Stelle sicher, dass der Server genügend Speicherplatz hat
 - Prüfe die Konsole auf Fehlermeldungen
+- Wenn Multiverse-Core installiert ist, überprüfe, ob es korrekt funktioniert
 
 ### Teleport funktioniert nicht
 - Überprüfe die Berechtigungen des Spielers
@@ -124,6 +124,12 @@ Beiträge sind willkommen! Wenn du Verbesserungen vornehmen möchtest:
 5. Öffne einen Pull Request
 
 ## Changelog
+### Version 1.1.3
+- Multiverse-Core ist jetzt optional und nicht mehr zwingend erforderlich
+- Das Plugin kann nun auch ohne Multiverse-Core betrieben werden
+- Verbesserte Kompatibilität mit anderen Plugins
+- Kleinere Bugfixes und Verbesserungen
+
 ### Version 1.1.0
 - Neue Funktion: Rotierende Welt-Seeds
 - Bei jedem Reset kann ein zufälliger Seed aus einer konfigurierbaren Liste gewählt werden
