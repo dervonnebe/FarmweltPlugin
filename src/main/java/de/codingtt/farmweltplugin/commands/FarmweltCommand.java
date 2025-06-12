@@ -3,6 +3,7 @@ package de.codingtt.farmweltplugin.commands;
 import de.codingtt.farmweltplugin.Main;
 import de.codingtt.farmweltplugin.utils.FarmweltMenu;
 import de.codingtt.farmweltplugin.utils.WorldUtils;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -114,6 +115,22 @@ public class FarmweltCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("back")) {
+            if (!plugin.isBackEnabled()) {
+                player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("back-disabled"));
+                return true;
+            }
+            Location backLoc = plugin.getBackLocation(player.getUniqueId());
+            if (backLoc != null) {
+                player.teleport(backLoc);
+                plugin.clearBackLocation(player.getUniqueId());
+                player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("back-success"));
+            } else {
+                player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("back-no-location"));
+            }
+            return true;
+        }
+
         return false;
     }
 
@@ -123,7 +140,9 @@ public class FarmweltCommand implements CommandExecutor, TabCompleter {
         
         if (args.length == 1) {
             completions.add("menu");
-            
+            if (plugin.isBackEnabled()) {
+                completions.add("back");
+            }
             if (sender.hasPermission(plugin.getConfig().getString("admin-permission", "farmwelt.admin"))) {
                 completions.add("reset");
                 completions.add("reload");

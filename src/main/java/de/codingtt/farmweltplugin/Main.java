@@ -14,6 +14,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Location;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +24,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class Main extends JavaPlugin {
     private static Main instance;
@@ -34,6 +37,7 @@ public final class Main extends JavaPlugin {
     private String language;
     private FarmweltMenu farmweltMenu;
     private Map<String, LocalDateTime> lastResetTimes;
+    private final ConcurrentHashMap<UUID, Location> backLocations = new ConcurrentHashMap<>();
 
     @Override
     public void onEnable() {
@@ -201,5 +205,18 @@ public final class Main extends JavaPlugin {
         if (worldUtils.worldExists(getEndWorldName())) {
             worldUtils.unloadWorld(getEndWorldName());
         }
+    }
+
+    public void setBackLocation(UUID uuid, Location location) {
+        backLocations.put(uuid, location);
+    }
+    public Location getBackLocation(UUID uuid) {
+        return backLocations.get(uuid);
+    }
+    public void clearBackLocation(UUID uuid) {
+        backLocations.remove(uuid);
+    }
+    public boolean isBackEnabled() {
+        return getConfig().getBoolean("enable-back-command", true);
     }
 }

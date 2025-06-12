@@ -37,4 +37,9 @@ menu-no-schedule: "Nicht geplant"
 farmwelt-name: "Farmwelt"
 nether-farmwelt-name: "Nether-Farmwelt"
 end-farmwelt-name: "End-Farmwelt"
-reset-not-scheduled: "Nicht geplant" 
+reset-not-scheduled: "Nicht geplant"
+
+# Back feature messages
+back-disabled: "&cDas Zurück-Feature ist deaktiviert."
+back-success: "&aDu wurdest zu deiner Ursprungsposition zurück teleportiert."
+back-no-location: "&cEs wurde keine Ursprungsposition gespeichert."

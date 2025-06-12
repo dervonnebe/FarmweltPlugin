@@ -57,3 +57,5 @@ menu:
     enabled: false
     material: "END_STONE"
     name: "&5End Farmwelt"
+
+enable-back-command: true # Spieler können sich mit /farmwelt back zurück teleportieren

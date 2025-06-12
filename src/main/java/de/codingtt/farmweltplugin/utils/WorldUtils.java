@@ -242,6 +242,17 @@ public class WorldUtils {
 
     public void teleportToWorld(Player player, String worldName) {
         if (worldExists(worldName)) {
+            // Back-Feature: Ursprungsposition speichern
+            if (plugin.isBackEnabled()) {
+                // Nur speichern, wenn Spieler nicht schon in einer Farmwelt ist
+                String currentWorld = player.getWorld().getName();
+                if (!currentWorld.equals(plugin.getWorldName()) &&
+                    !currentWorld.equals(plugin.getNetherWorldName()) &&
+                    !currentWorld.equals(plugin.getEndWorldName())) {
+                    plugin.setBackLocation(player.getUniqueId(), player.getLocation());
+                }
+            }
+            
             World world;
             
             if (useMultiverse) {
