@@ -195,7 +195,14 @@ public class WorldUtils {
         } else {
             // Bukkit-Alternative
             if (Bukkit.getWorld(worldName) == null) {
-                new WorldCreator(worldName).createWorld();
+                // Environment aus Config bestimmen
+                World.Environment environment = World.Environment.NORMAL;
+                if (worldName.equals(plugin.getNetherWorldName())) {
+                    environment = World.Environment.NETHER;
+                } else if (worldName.equals(plugin.getEndWorldName())) {
+                    environment = World.Environment.THE_END;
+                }
+                new WorldCreator(worldName).environment(environment).createWorld();
             }
         }
     }
