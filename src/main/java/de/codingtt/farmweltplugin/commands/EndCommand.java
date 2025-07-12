@@ -18,12 +18,10 @@ public class EndCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("command-player-only"));
             return true;
         }
-
-        Player player = (Player) sender;
 
         if (!player.hasPermission(plugin.getConfig().getString("default-permission", "farmwelt.use"))) {
             player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("no-permission"));

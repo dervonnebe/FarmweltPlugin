@@ -26,12 +26,10 @@ public class FarmweltCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("command-player-only"));
             return true;
         }
-
-        Player player = (Player) sender;
 
         if (args.length == 0) {
             if (!player.hasPermission(plugin.getConfig().getString("default-permission", "farmwelt.use"))) {
