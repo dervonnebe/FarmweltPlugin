@@ -64,16 +64,13 @@ public class WorldUtils {
                     plugin.getLogger().info("Using rotating seed: " + seed + " for world: " + worldName);
                 }
             }
-            // Fallback, falls kein Seed gesetzt wurde
             if (seed == null) {
                 seed = random.nextLong();
-                plugin.getLogger().info("No seed found in config, using random seed: " + seed + " for world: " + worldName);
             }
 
             boolean success = false;
 
             if (useMultiverse) {
-                // Nur Multiverse verwenden, nicht zusätzlich Bukkit
                 core.getWorldManager()
                         .createWorld(CreateWorldOptions.worldName(worldName)
                                 .environment(environment)
@@ -82,7 +79,6 @@ public class WorldUtils {
                         .onFailure(reason -> plugin.getLogger().warning("Failed to create world: " + worldName + " Reason: " + reason))
                         .onSuccess(newWorld -> {
                             plugin.getLogger().info("World created successfully: " + worldName + " (" + environment + ")");
-                            loadWorld(worldName);
                         });
                 success = true; // Erfolg wird asynchron gemeldet
             } else {
@@ -220,9 +216,12 @@ public class WorldUtils {
 
     public void loadWorld(String worldName) {
         if (useMultiverse) {
-            core.getWorldManager().loadWorld(worldName)
-                .onFailure(reason -> plugin.getLogger().warning("Failed to load world: " + worldName + " Reason: " + reason))
-                .onSuccess(unused -> plugin.getLogger().info("World loaded: " + worldName));
+             Option<MultiverseWorld> world = core.getWorldManager().getWorld(worldName);
+             if (!world.get().isLoaded()) {
+                 core.getWorldManager().loadWorld(worldName)
+                         .onFailure(reason -> plugin.getLogger().warning("Failed to load world: " + worldName + " Reason: " + reason))
+                         .onSuccess(unused -> plugin.getLogger().info("World loaded: " + worldName));
+             }
         } else {
             // Bukkit-Alternative
             if (Bukkit.getWorld(worldName) == null) {
@@ -267,16 +266,12 @@ public class WorldUtils {
     }
 
     public boolean worldExists(String worldName) {
-        if (useMultiverse) {
-            return core.getWorldManager().getWorld(worldName).isDefined();
-        } else {
-            if (Bukkit.getWorld(worldName) != null) {
-                return true;
-            }
-            
-            File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
-            return worldFolder.exists() && worldFolder.isDirectory();
+        if (Bukkit.getWorld(worldName) != null) {
+            return true;
         }
+
+        File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
+        return worldFolder.exists() && worldFolder.isDirectory();
     }
 
     public void teleportToWorld(Player player, String worldName) {
@@ -291,30 +286,18 @@ public class WorldUtils {
                     plugin.setBackLocation(player.getUniqueId(), player.getLocation());
                 }
             }
-            
-            World world;
-            
-            if (useMultiverse) {
-                Option<MultiverseWorld> mvWorldOpt = core.getWorldManager().getWorld(worldName);
-                if (mvWorldOpt.isDefined()) {
-                    world = mvWorldOpt.get().getRespawnWorld();
-                } else {
-                    plugin.getLogger().severe("Could not load world: " + worldName);
-                    return;
-                }
-            } else {
+
+            World world = Bukkit.getWorld(worldName);
+            if (world == null) {
+                loadWorld(worldName);
                 world = Bukkit.getWorld(worldName);
-                if (world == null) {
-                    loadWorld(worldName);
-                    world = Bukkit.getWorld(worldName);
-                }
-                
-                if (world == null) {
-                    plugin.getLogger().severe("Could not load world: " + worldName);
-                    return;
-                }
             }
-            
+
+            if (world == null) {
+                plugin.getLogger().severe("Could not load world: " + worldName);
+                return;
+            }
+
             boolean useRandomTp = true;
             if (worldName.equals(plugin.getWorldName())) {
                 useRandomTp = plugin.getConfig().getBoolean("farmwelt-settings.use-random-teleport", true);
@@ -345,7 +328,7 @@ public class WorldUtils {
             } else {
                 maxDistance = plugin.getConfig().getInt("random-teleport-distance", 1000);
             }
-            
+
             World.Environment environment = world.getEnvironment();
             if (environment == World.Environment.NETHER && worldName.equals(plugin.getNetherWorldName())) {
                 if (!plugin.getConfig().contains("nether-world-settings.teleport-distance")) {
