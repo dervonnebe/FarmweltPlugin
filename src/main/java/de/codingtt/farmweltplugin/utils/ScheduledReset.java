@@ -25,8 +25,9 @@ public class ScheduledReset extends BukkitRunnable {
         LocalDateTime now = LocalDateTime.now(ZoneId.of(plugin.getConfig().getString("reset-schedule.timezone", "Europe/Berlin")));
         
         if (shouldReset(now)) {
+            // lastReset direkt setzen, damit kein mehrfacher Reset im Loop passiert
+            lastReset = now;
             Bukkit.broadcastMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("reset-announcement"));
-            
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 resetAllFarmworlds();
             }, 6000L);
@@ -63,8 +64,8 @@ public class ScheduledReset extends BukkitRunnable {
             worldUtils.resetWorld(plugin.getEndWorldName());
         }
         
-        Bukkit.broadcastMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("reset-complete"));
-        lastReset = LocalDateTime.now(ZoneId.of(plugin.getConfig().getString("reset-schedule.timezone", "Europe/Berlin")));
+    Bukkit.broadcastMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("reset-complete"));
+    // lastReset wird jetzt im run() gesetzt, nicht mehr hier
     }
 
     private boolean shouldReset(LocalDateTime now) {
