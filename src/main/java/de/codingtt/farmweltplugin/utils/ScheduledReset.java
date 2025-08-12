@@ -73,16 +73,28 @@ public class ScheduledReset extends BukkitRunnable {
             return false;
         }
 
+        String resetTimeStr = plugin.getConfig().getString("reset-schedule.time", "00:00");
+        int resetHour = 0;
+        int resetMinute = 0;
+        try {
+            String[] parts = resetTimeStr.split(":");
+            resetHour = Integer.parseInt(parts[0]);
+            resetMinute = Integer.parseInt(parts[1]);
+        } catch (Exception e) {
+            // Fallback auf 00:00 falls Fehler
+            resetHour = 0;
+            resetMinute = 0;
+        }
+
         if (plugin.getConfig().getBoolean("reset-schedule.daily")) {
-            return now.getHour() == 0 && now.getMinute() == 0;
+            return now.getHour() == resetHour && now.getMinute() == resetMinute;
         } else if (plugin.getConfig().getBoolean("reset-schedule.weekly") 
                 && now.getDayOfWeek().getValue() == plugin.getConfig().getInt("reset-schedule.day-of-week")) {
-            return now.getHour() == 0 && now.getMinute() == 0;
+            return now.getHour() == resetHour && now.getMinute() == resetMinute;
         } else if (plugin.getConfig().getBoolean("reset-schedule.monthly") 
                 && now.getDayOfMonth() == plugin.getConfig().getInt("reset-schedule.day-of-month")) {
-            return now.getHour() == 0 && now.getMinute() == 0;
+            return now.getHour() == resetHour && now.getMinute() == resetMinute;
         }
-        
         return false;
     }
 }

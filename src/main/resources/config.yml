@@ -38,6 +38,7 @@ rotating-seeds:
 
 reset-schedule:
   timezone: "Europe/Berlin" # Timezone for reset
+  time: "03:00" # Uhrzeit für den Reset im Format HH:mm
   daily: true
   weekly: false
   monthly: false
