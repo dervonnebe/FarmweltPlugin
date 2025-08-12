@@ -148,39 +148,51 @@ public class FarmweltPlaceholders extends PlaceholderExpansion {
         }
         
         LocalDateTime now = LocalDateTime.now(ZoneId.of(plugin.getConfig().getString("reset-schedule.timezone", "Europe/Berlin")));
+        String resetTimeStr = plugin.getConfig().getString("reset-schedule.time", "00:00");
+        int resetHour = 0;
+        int resetMinute = 0;
+        try {
+            String[] parts = resetTimeStr.split(":");
+            resetHour = Integer.parseInt(parts[0]);
+            resetMinute = Integer.parseInt(parts[1]);
+        } catch (Exception e) {
+            resetHour = 0;
+            resetMinute = 0;
+        }
+
         LocalDateTime nextReset = null;
-        
+
         if (plugin.getConfig().getBoolean("reset-schedule.daily")) {
-            nextReset = lastReset.plusDays(1).withHour(0).withMinute(0).withSecond(0);
+            nextReset = lastReset.plusDays(1).withHour(resetHour).withMinute(resetMinute).withSecond(0);
         } else if (plugin.getConfig().getBoolean("reset-schedule.weekly")) {
             int targetDayOfWeek = plugin.getConfig().getInt("reset-schedule.day-of-week", 1);
-            nextReset = lastReset.plusWeeks(1).withHour(0).withMinute(0).withSecond(0);
+            nextReset = lastReset.plusWeeks(1).withHour(resetHour).withMinute(resetMinute).withSecond(0);
             while (nextReset.getDayOfWeek().getValue() != targetDayOfWeek) {
                 nextReset = nextReset.plusDays(1);
             }
         } else if (plugin.getConfig().getBoolean("reset-schedule.monthly")) {
             int targetDayOfMonth = plugin.getConfig().getInt("reset-schedule.day-of-month", 1);
-            nextReset = lastReset.plusMonths(1).withDayOfMonth(targetDayOfMonth).withHour(0).withMinute(0).withSecond(0);
+            nextReset = lastReset.plusMonths(1).withDayOfMonth(targetDayOfMonth).withHour(resetHour).withMinute(resetMinute).withSecond(0);
         }
-        
+
         if (nextReset != null && nextReset.isBefore(now)) {
             if (plugin.getConfig().getBoolean("reset-schedule.daily")) {
-                nextReset = now.plusDays(1).withHour(0).withMinute(0).withSecond(0);
+                nextReset = now.plusDays(1).withHour(resetHour).withMinute(resetMinute).withSecond(0);
             } else if (plugin.getConfig().getBoolean("reset-schedule.weekly")) {
                 int targetDayOfWeek = plugin.getConfig().getInt("reset-schedule.day-of-week", 1);
-                nextReset = now.withHour(0).withMinute(0).withSecond(0);
+                nextReset = now.withHour(resetHour).withMinute(resetMinute).withSecond(0);
                 while (nextReset.getDayOfWeek().getValue() != targetDayOfWeek || nextReset.isBefore(now)) {
                     nextReset = nextReset.plusDays(1);
                 }
             } else if (plugin.getConfig().getBoolean("reset-schedule.monthly")) {
                 int targetDayOfMonth = plugin.getConfig().getInt("reset-schedule.day-of-month", 1);
-                nextReset = now.withDayOfMonth(targetDayOfMonth).withHour(0).withMinute(0).withSecond(0);
+                nextReset = now.withDayOfMonth(targetDayOfMonth).withHour(resetHour).withMinute(resetMinute).withSecond(0);
                 if (nextReset.isBefore(now) || now.getDayOfMonth() > targetDayOfMonth) {
                     nextReset = nextReset.plusMonths(1);
                 }
             }
         }
-        
+
         return nextReset;
     }
 } 
