@@ -38,6 +38,7 @@ end-world-settings:
     radius: 2500
 
 use-bstats: true # Set to false to disable bStats metrics collection
+update-notification: true # Enable in-game update notifications for admins
 
 default-permission: "farmwelt.use" # Permission for /farmwelt
 admin-permission: "farmwelt.admin" # Permission for /farmwelt reset

@@ -9,6 +9,7 @@ import de.codingtt.farmweltplugin.utils.MenuListener;
 import de.codingtt.farmweltplugin.utils.ScheduledReset;
 import de.codingtt.farmweltplugin.utils.WorldUtils;
 import de.codingtt.farmweltplugin.utils.ConfigManager;
+import de.codingtt.farmweltplugin.utils.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -62,6 +63,10 @@ public final class Main extends JavaPlugin {
 
         registerCommands();
         registerEvents();
+
+        UpdateChecker updateChecker = new UpdateChecker(this);
+        updateChecker.checkForUpdates();
+        getServer().getPluginManager().registerEvents(updateChecker, this);
         
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new FarmweltPlaceholders(this).register();
