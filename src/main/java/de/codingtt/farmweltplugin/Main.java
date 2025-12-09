@@ -8,6 +8,7 @@ import de.codingtt.farmweltplugin.utils.FarmweltPlaceholders;
 import de.codingtt.farmweltplugin.utils.MenuListener;
 import de.codingtt.farmweltplugin.utils.ScheduledReset;
 import de.codingtt.farmweltplugin.utils.WorldUtils;
+import de.codingtt.farmweltplugin.utils.ConfigManager;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -42,7 +43,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        this.saveDefaultConfig();
+        new ConfigManager(this).checkConfig();
         this.language = getConfig().getString("language", "de");
         loadLanguageConfig();
         
