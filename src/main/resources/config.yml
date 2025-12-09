@@ -10,14 +10,17 @@ random-teleport-distance: 1000 # Fallback
 farmwelt-settings:
   use-random-teleport: true
   teleport-distance: 2000
+  generator: "" # Custom generator name, e.g., "TerraformGenerator"
 
 nether-world-settings:
   use-random-teleport: true
   teleport-distance: 300
+  generator: ""
 
 end-world-settings:
   use-random-teleport: true
   teleport-distance: 1500
+  generator: ""
 
 use-bstats: true # Set to false to disable bStats metrics collection
 

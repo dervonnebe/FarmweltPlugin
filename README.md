@@ -7,6 +7,7 @@ Ein leistungsstarkes Spigot-Plugin für automatisch resettende Farmwelten. Ideal
 - ⏰ Automatische Reset-Zeitpläne (täglich, wöchentlich oder monatlich)
 - 🎯 Zufällige Teleportation innerhalb der Farmwelt
 - 🌱 Rotierende Welt-Seeds für abwechslungsreiche Biome und Strukturen
+- 🎨 Support für Custom World Generatoren (z.B. TerraformGenerator)
 - 🏷️ PlaceholderAPI-Integration für Anzeige von Reset-Zeiten und Spielerzahlen
 - 🛠️ Einfache Konfiguration
 - 💻 Multiverse-Core Integration (optional)
@@ -53,6 +54,15 @@ prefix: "&8[&6&lFarmwelt&8]&r "
 farmwelt-world: "farmwelt"
 random-teleport-distance: 1000
 use-bstats: true # Setze auf false, um bStats zu deaktivieren
+
+farmwelt-settings:
+  generator: "" # Custom generator name, e.g., "TerraformGenerator"
+
+nether-world-settings:
+  generator: ""
+
+end-world-settings:
+  generator: ""
 
 # Rotierende Seeds für Farmwelten
 rotating-seeds:

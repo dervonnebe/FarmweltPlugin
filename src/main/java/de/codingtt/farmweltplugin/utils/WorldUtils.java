@@ -68,14 +68,37 @@ public class WorldUtils {
                 seed = random.nextLong();
             }
 
+            String generator = null;
+            if (environment == World.Environment.NORMAL) {
+                generator = plugin.getConfig().getString("farmwelt-settings.generator");
+            } else if (environment == World.Environment.NETHER) {
+                generator = plugin.getConfig().getString("nether-world-settings.generator");
+            } else if (environment == World.Environment.THE_END) {
+                generator = plugin.getConfig().getString("end-world-settings.generator");
+            }
+
+            if (generator != null && generator.trim().isEmpty()) {
+                generator = null;
+            }
+
+            if (generator != null) {
+                plugin.getLogger().info("Using generator: " + generator + " for world: " + worldName);
+            }
+
             boolean success = false;
 
             if (useMultiverse) {
+                CreateWorldOptions options = CreateWorldOptions.worldName(worldName)
+                        .environment(environment)
+                        .seed(seed)
+                        .generateStructures(true);
+
+                if (generator != null) {
+                    options.generator(generator);
+                }
+
                 core.getWorldManager()
-                        .createWorld(CreateWorldOptions.worldName(worldName)
-                                .environment(environment)
-                                .seed(seed)
-                                .generateStructures(true))
+                        .createWorld(options)
                         .onFailure(reason -> plugin.getLogger().warning("Failed to create world: " + worldName + " Reason: " + reason))
                         .onSuccess(newWorld -> {
                             plugin.getLogger().info("World created successfully: " + worldName + " (" + environment + ")");
@@ -89,6 +112,11 @@ public class WorldUtils {
                                 WorldType.NORMAL)
                         .generateStructures(true)
                         .seed(seed);
+
+                if (generator != null) {
+                    worldCreator.generator(generator);
+                }
+
                 World world = worldCreator.createWorld();
                 success = world != null;
                 if (success) {
@@ -227,12 +255,27 @@ public class WorldUtils {
             if (Bukkit.getWorld(worldName) == null) {
                 // Environment aus Config bestimmen
                 World.Environment environment = World.Environment.NORMAL;
+                String generator = null;
+
                 if (worldName.equals(plugin.getNetherWorldName())) {
                     environment = World.Environment.NETHER;
+                    generator = plugin.getConfig().getString("nether-world-settings.generator");
                 } else if (worldName.equals(plugin.getEndWorldName())) {
                     environment = World.Environment.THE_END;
+                    generator = plugin.getConfig().getString("end-world-settings.generator");
+                } else {
+                    generator = plugin.getConfig().getString("farmwelt-settings.generator");
                 }
-                new WorldCreator(worldName).environment(environment).createWorld();
+
+                if (generator != null && generator.trim().isEmpty()) {
+                    generator = null;
+                }
+
+                WorldCreator wc = new WorldCreator(worldName).environment(environment);
+                if (generator != null) {
+                    wc.generator(generator);
+                }
+                wc.createWorld();
             }
         }
     }
