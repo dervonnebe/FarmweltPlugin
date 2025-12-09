@@ -11,16 +11,31 @@ farmwelt-settings:
   use-random-teleport: true
   teleport-distance: 2000
   generator: "" # Custom generator name, e.g., "TerraformGenerator"
+  world-border:
+    size: 5000 # Size of the world border (diameter)
+  chunky:
+    enabled: false # Enable Chunky pre-generation
+    radius: 2500 # Radius for Chunky pre-generation (should be half of world-border size)
 
 nether-world-settings:
   use-random-teleport: true
   teleport-distance: 300
   generator: ""
+  world-border:
+    size: 5000
+  chunky:
+    enabled: false
+    radius: 2500
 
 end-world-settings:
   use-random-teleport: true
   teleport-distance: 1500
   generator: ""
+  world-border:
+    size: 5000
+  chunky:
+    enabled: false
+    radius: 2500
 
 use-bstats: true # Set to false to disable bStats metrics collection
 

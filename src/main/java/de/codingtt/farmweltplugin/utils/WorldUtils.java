@@ -4,6 +4,7 @@ import de.codingtt.farmweltplugin.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.WorldBorder;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
@@ -26,18 +27,28 @@ public class WorldUtils {
     private final MultiverseCoreApi core;
     private final Random random = new Random();
     private final boolean useMultiverse;
+    private final boolean useChunky;
 
     public WorldUtils(Main plugin) {
         this.plugin = plugin;
         Plugin mvPlugin = Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
         this.useMultiverse = mvPlugin != null;
         
+        Plugin chunkyPlugin = Bukkit.getServer().getPluginManager().getPlugin("Chunky");
+        this.useChunky = chunkyPlugin != null;
+
         if (useMultiverse) {
             this.core = MultiverseCoreApi.get();
             plugin.getLogger().info("Multiverse-Core found - Activate Multiverse-Integration");
         } else {
             this.core = null;
             plugin.getLogger().info("Multiverse-Core not found - Use Bukkit World Management");
+        }
+
+        if (useChunky) {
+            plugin.getLogger().info("Chunky found - Activate Chunky-Integration");
+        } else {
+            plugin.getLogger().info("Chunky not found - Chunky-Integration disabled");
         }
     }
 
@@ -102,6 +113,11 @@ public class WorldUtils {
                         .onFailure(reason -> plugin.getLogger().warning("Failed to create world: " + worldName + " Reason: " + reason))
                         .onSuccess(newWorld -> {
                             plugin.getLogger().info("World created successfully: " + worldName + " (" + environment + ")");
+                            World world = Bukkit.getWorld(worldName);
+                            if (world != null) {
+                                setupWorldBorder(world);
+                                startChunkyGeneration(world);
+                            }
                         });
                 success = true; // Erfolg wird asynchron gemeldet
             } else {
@@ -122,6 +138,8 @@ public class WorldUtils {
                 if (success) {
                     plugin.getLogger().info("World created successfully: " + worldName + " (" + environment + ")");
                     loadWorld(worldName);
+                    setupWorldBorder(world);
+                    startChunkyGeneration(world);
                 } else {
                     plugin.getLogger().warning("Failed to create world: " + worldName);
                 }
@@ -412,6 +430,51 @@ public class WorldUtils {
             
             player.teleport(safeLocation);
             plugin.getLogger().info("Teleported player " + player.getName() + " to " + worldName);
+        }
+    }
+
+    private void setupWorldBorder(World world) {
+        String worldName = world.getName();
+        double size;
+
+        if (worldName.equals(plugin.getNetherWorldName())) {
+            size = plugin.getConfig().getDouble("nether-world-settings.world-border.size", 5000);
+        } else if (worldName.equals(plugin.getEndWorldName())) {
+            size = plugin.getConfig().getDouble("end-world-settings.world-border.size", 5000);
+        } else {
+            size = plugin.getConfig().getDouble("farmwelt-settings.world-border.size", 5000);
+        }
+
+        WorldBorder border = world.getWorldBorder();
+        border.setCenter(0, 0);
+        border.setSize(size);
+        plugin.getLogger().info("WorldBorder for " + worldName + " set to " + size);
+    }
+
+    private void startChunkyGeneration(World world) {
+        if (!useChunky) return;
+
+        String worldName = world.getName();
+        boolean enabled;
+        double radius;
+
+        if (worldName.equals(plugin.getNetherWorldName())) {
+            enabled = plugin.getConfig().getBoolean("nether-world-settings.chunky.enabled", false);
+            radius = plugin.getConfig().getDouble("nether-world-settings.chunky.radius", 2500);
+        } else if (worldName.equals(plugin.getEndWorldName())) {
+            enabled = plugin.getConfig().getBoolean("end-world-settings.chunky.enabled", false);
+            radius = plugin.getConfig().getDouble("end-world-settings.chunky.radius", 2500);
+        } else {
+            enabled = plugin.getConfig().getBoolean("farmwelt-settings.chunky.enabled", false);
+            radius = plugin.getConfig().getDouble("farmwelt-settings.chunky.radius", 2500);
+        }
+
+        if (enabled) {
+            plugin.getLogger().info("Starting Chunky generation for " + worldName + " with radius " + radius);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chunky world " + worldName);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chunky center 0 0");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chunky radius " + (int)radius);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chunky start");
         }
     }
     

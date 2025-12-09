@@ -4,7 +4,7 @@ main: de.codingtt.farmweltplugin.Main
 api-version: '1.16'
 author: dervonnebe
 description: A powerful farmworld plugin with automatic resets
-softdepend: ['Multiverse-Core', 'PlaceholderAPI']
+softdepend: ['Multiverse-Core', 'PlaceholderAPI', 'Chunky']
 commands:
     farmwelt:
         aliases:
