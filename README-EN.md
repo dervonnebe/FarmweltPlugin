@@ -79,30 +79,6 @@ https://bstats.org/plugin/bukkit/FarmworldPlugin/24022
 • Discord: dervonnebe
 • https://github.com/dervonnebe/FarmweltPlugin/issues
 
-## Changelog
-
-### Version 1.1.3
-• Multiverse-Core is now optional and no longer required
-• The plugin can now operate without Multiverse-Core
-• Improved compatibility with other plugins
-• Minor bugfixes and improvements
-
-### Version 1.1.0
-• New farm worlds: Added Nether and End
-• GUI menu system for world selection
-• Multi-language support (German/English)
-• Rotating world seeds system
-• Improved teleport safety
-• bStats can now be disabled
-• Enhanced world reset system
-
-### Version 1.0.0
-• First stable version
-• Automatic reset system
-• Player safety system
-• bStats integration
-• Improved error handling
-
 ## ⭐ Ratings
 If you like the plugin, please leave a positive rating!
 
