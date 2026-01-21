@@ -10,6 +10,7 @@ import de.codingtt.farmweltplugin.utils.ScheduledReset;
 import de.codingtt.farmweltplugin.utils.WorldUtils;
 import de.codingtt.farmweltplugin.utils.ConfigManager;
 import de.codingtt.farmweltplugin.utils.UpdateChecker;
+import de.codingtt.farmweltplugin.utils.CooldownManager;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
