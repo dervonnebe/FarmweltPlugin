@@ -133,28 +133,6 @@ Beiträge sind willkommen! Wenn du Verbesserungen vornehmen möchtest:
 4. Pushe zum Branch
 5. Öffne einen Pull Request
 
-## Changelog
-### Version 1.1.3
-- Multiverse-Core ist jetzt optional und nicht mehr zwingend erforderlich
-- Das Plugin kann nun auch ohne Multiverse-Core betrieben werden
-- Verbesserte Kompatibilität mit anderen Plugins
-- Kleinere Bugfixes und Verbesserungen
-
-### Version 1.1.0
-- Neue Funktion: Rotierende Welt-Seeds
-- Bei jedem Reset kann ein zufälliger Seed aus einer konfigurierbaren Liste gewählt werden
-- Separate Seed-Listen für normale, Nether- und End-Farmwelten
-- Verbesserte Dokumentation
-
-### Version 1.0.0
-- Erste stabile Version
-- Grundlegende Farmwelt-Funktionalität
-- Automatische Reset-Funktion mit Ankündigung
-- Zufälliger Teleport
-- Multiverse-Core Integration
-- bStats Integration
-- Verbesserte Fehlerbehandlung
-
 ## Statistiken
 Dieses Plugin verwendet bStats für anonyme Nutzungsstatistiken. Die Statistiken können [hier](https://bstats.org/plugin/bukkit/FarmworldPlugin/24022) eingesehen werden.
 
