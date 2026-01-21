@@ -78,22 +78,22 @@ jobs:
             
             const body = `## Build Failure Report
 
-**Version:** \`${version}\`
-**Commit:** [\`${commitSha}\`](${commitUrl})
-**Triggered by:** @${{ github.actor }}
+            **Version:** \`${version}\`
+            **Commit:** [\`${commitSha}\`](${commitUrl})
+            **Triggered by:** @${{ github.actor }}
 
-### Build Error
-\`\`\`
-${buildLogs}
-\`\`\`
+            ### Build Error
+            \`\`\`
+            ${buildLogs}
+            \`\`\`
 
-### Actions Required
-1. Review the build errors above
-2. Fix the issues in the code
-3. Update the version in \`pom.xml\` and push again
+            ### Actions Required
+            1. Review the build errors above
+            2. Fix the issues in the code
+            3. Update the version in \`pom.xml\` and push again
 
-[View Workflow Run](${workflowUrl})
-`;
+            [View Workflow Run](${workflowUrl})
+            `;
             
             github.rest.issues.create({
               owner: context.repo.owner,
