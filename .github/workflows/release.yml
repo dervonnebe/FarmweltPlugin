@@ -116,23 +116,17 @@ jobs:
           CURRENT_TAG="${{ steps.version.outputs.TAG }}"
           
           if [ -z "$PREV_TAG" ]; then
-            # Erste Release: zeige die letzten 5 Commits
             CHANGELOG=$(git log --oneline --pretty=format:"- %h: %s (%an)" | head -5)
             COMMIT_COUNT=$(git log --oneline | wc -l)
             if [ "$COMMIT_COUNT" -gt 5 ]; then
-              CHANGELOG="$CHANGELOG
-
-[View all commits](https://github.com/${{ github.repository }}/commits/$CURRENT_TAG)"
+              CHANGELOG="$CHANGELOG"$'\n\n'"[View all commits](https://github.com/${{ github.repository }}/commits/$CURRENT_TAG)"
             fi
           else
             COMMIT_COUNT=$(git rev-list --count $PREV_TAG..$CURRENT_TAG 2>/dev/null || echo 0)
             if [ "$COMMIT_COUNT" -gt 5 ]; then
               CHANGELOG=$(git log $PREV_TAG..HEAD --oneline --pretty=format:"- %h: %s (%an)" | head -5)
-              CHANGELOG="$CHANGELOG
-
-**+ $((COMMIT_COUNT - 5)) more commits**
-
-[View all changes between $PREV_TAG and $CURRENT_TAG](https://github.com/${{ github.repository }}/compare/$PREV_TAG...$CURRENT_TAG)"
+              ADDITIONAL_COUNT=$((COMMIT_COUNT - 5))
+              CHANGELOG="$CHANGELOG"$'\n\n'"**+ $ADDITIONAL_COUNT more commits**"$'\n\n'"[View all changes between $PREV_TAG and $CURRENT_TAG](https://github.com/${{ github.repository }}/compare/$PREV_TAG...$CURRENT_TAG)"
             else
               CHANGELOG=$(git log $PREV_TAG..HEAD --oneline --pretty=format:"- %h: %s (%an)")
             fi
