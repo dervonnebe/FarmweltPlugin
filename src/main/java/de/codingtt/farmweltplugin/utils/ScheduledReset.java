@@ -69,6 +69,7 @@ public class ScheduledReset extends BukkitRunnable {
     }
 
     private boolean shouldReset(LocalDateTime now) {
+        // Prüfe ob schon heute zurückgesetzt wurde
         if (now.toLocalDate().equals(lastReset.toLocalDate())) {
             return false;
         }
@@ -86,14 +87,27 @@ public class ScheduledReset extends BukkitRunnable {
             resetMinute = 0;
         }
 
+        // Prüfe ob aktuelle Zeit im richtigen Zeitfenster liegt (±1 Minute Toleranz)
+        int currentMinutes = now.getHour() * 60 + now.getMinute();
+        int resetMinutes = resetHour * 60 + resetMinute;
+        boolean isInTimeWindow = Math.abs(currentMinutes - resetMinutes) <= 1;
+
         if (plugin.getConfig().getBoolean("reset-schedule.daily")) {
-            return now.getHour() == resetHour && now.getMinute() == resetMinute;
-        } else if (plugin.getConfig().getBoolean("reset-schedule.weekly") 
-                && now.getDayOfWeek().getValue() == plugin.getConfig().getInt("reset-schedule.day-of-week")) {
-            return now.getHour() == resetHour && now.getMinute() == resetMinute;
-        } else if (plugin.getConfig().getBoolean("reset-schedule.monthly") 
-                && now.getDayOfMonth() == plugin.getConfig().getInt("reset-schedule.day-of-month")) {
-            return now.getHour() == resetHour && now.getMinute() == resetMinute;
+            return isInTimeWindow;
+        } else if (plugin.getConfig().getBoolean("reset-schedule.weekly")) {
+            // getDayOfWeek().getValue(): 1=Montag, 7=Sonntag
+            // Konfiguration: 0=Sonntag, 1=Montag, ..., 5=Freitag, 6=Samstag
+            int javaDayOfWeek = now.getDayOfWeek().getValue();
+            int configDayOfWeek = plugin.getConfig().getInt("reset-schedule.day-of-week");
+            
+            // Konvertiere Konfigurationstag (0=Sonntag) zu Java-Tag (7=Sonntag)
+            if (configDayOfWeek == 0) {
+                configDayOfWeek = 7; // Sonntag
+            }
+            
+            return javaDayOfWeek == configDayOfWeek && isInTimeWindow;
+        } else if (plugin.getConfig().getBoolean("reset-schedule.monthly")) {
+            return now.getDayOfMonth() == plugin.getConfig().getInt("reset-schedule.day-of-month") && isInTimeWindow;
         }
         return false;
     }
