@@ -65,35 +65,42 @@ jobs:
       - name: Create issue on build failure
         if: steps.build.outcome == 'failure'
         uses: actions/github-script@v7
+        env:
+          BUILD_LOGS: ${{ steps.build_logs.outputs.LOGS }}
         with:
           script: |
             const version = '${{ steps.version.outputs.VERSION }}';
-            const buildLogs = `${{ steps.build_logs.outputs.LOGS }}`;
+            const buildLogs = process.env.BUILD_LOGS;
             const commitSha = context.sha.substring(0, 7);
+            const repoUrl = 'https://github.com/${{ github.repository }}';
+            const commitUrl = repoUrl + '/commit/${{ github.sha }}';
+            const workflowUrl = repoUrl + '/actions/runs/${{ github.run_id }}';
+            
+            const body = `## Build Failure Report
+
+**Version:** \`${version}\`
+**Commit:** [\`${commitSha}\`](${commitUrl})
+**Triggered by:** @${{ github.actor }}
+
+### Build Error
+\`\`\`
+${buildLogs}
+\`\`\`
+
+### Actions Required
+1. Review the build errors above
+2. Fix the issues in the code
+3. Update the version in \`pom.xml\` and push again
+
+[View Workflow Run](${workflowUrl})
+`;
             
             github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: `❌ Build Failed - Version ${version}`,
-              body: `## Build Failure Report
-
-              **Version:** \`${version}\`
-              **Commit:** [\`${commitSha}\`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
-              **Triggered by:** @${{ github.actor }}
-
-              ### Build Error
-              \`\`\`
-              ${buildLogs}
-              \`\`\`
-
-              ### Actions Required
-              1. Review the build errors above
-              2. Fix the issues in the code
-              3. Update the version in \`pom.xml\` and push again
-
-              [View Workflow Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-              `,
-              labels: ['bug', 'build-failure', \`v\${version}\`]
+              body: body,
+              labels: ['bug', 'build-failure']
             });
 
       - name: Fail workflow on build error
