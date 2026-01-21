@@ -43,6 +43,11 @@ update-notification: true # Enable in-game update notifications for admins
 default-permission: "farmwelt.use" # Permission for /farmwelt
 admin-permission: "farmwelt.admin" # Permission for /farmwelt reset
 
+# Command cooldown configuration
+command-cooldown:
+  enabled: false # Set to true to enable cooldown
+  seconds: 30 # Cooldown duration in seconds
+
 # Rotating seeds
 rotating-seeds:
   enabled: false

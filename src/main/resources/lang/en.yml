@@ -27,6 +27,7 @@ end-not-enabled: "&cThe end farmworld is not enabled. Please enable it in the co
 back-disabled: "&cThe back feature is disabled."
 back-success: "&aYou have been teleported back to your original position."
 back-no-location: "&cNo original position was saved."
+cooldown-active: "&cPlease wait &e%seconds%&c seconds before using this command again."
 
 # Menu strings
 menu-title: "§6§lFarmworld Selection"

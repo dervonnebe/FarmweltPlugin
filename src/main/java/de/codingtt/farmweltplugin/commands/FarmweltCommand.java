@@ -37,8 +37,18 @@ public class FarmweltCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
 
+            // Check cooldown
+            if (plugin.getCooldownManager().hasCooldown(player.getUniqueId())) {
+                long remaining = plugin.getCooldownManager().getRemainingCooldown(player.getUniqueId());
+                String message = plugin.getLanguageString("cooldown-active");
+                message = message.replace("%seconds%", String.valueOf(remaining));
+                player.sendMessage(plugin.getLanguageString("prefix") + message);
+                return true;
+            }
+
             if (worldUtils.worldExists(plugin.getWorldName())) {
                 worldUtils.teleportToWorld(player, plugin.getWorldName());
+                plugin.getCooldownManager().setCooldown(player.getUniqueId());
                 player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("world-teleport"));
             } else {
                 player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("no-world"));

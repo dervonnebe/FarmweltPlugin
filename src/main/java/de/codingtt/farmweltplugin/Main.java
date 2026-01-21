@@ -40,6 +40,7 @@ public final class Main extends JavaPlugin {
     private FarmweltMenu farmweltMenu;
     private Map<String, LocalDateTime> lastResetTimes;
     private final ConcurrentHashMap<UUID, Location> backLocations = new ConcurrentHashMap<>();
+    private CooldownManager cooldownManager;
 
     @Override
     public void onEnable() {
@@ -49,6 +50,11 @@ public final class Main extends JavaPlugin {
         loadLanguageConfig();
         
         this.lastResetTimes = new HashMap<>();
+        
+        // Initialize cooldown manager
+        boolean cooldownEnabled = getConfig().getBoolean("command-cooldown.enabled", false);
+        long cooldownSeconds = getConfig().getLong("command-cooldown.seconds", 30);
+        this.cooldownManager = new CooldownManager(cooldownSeconds, cooldownEnabled);
         
         this.worldUtils = new WorldUtils(this);
         
@@ -224,5 +230,9 @@ public final class Main extends JavaPlugin {
     }
     public boolean isBackEnabled() {
         return getConfig().getBoolean("enable-back-command", true);
+    }
+
+    public CooldownManager getCooldownManager() {
+        return cooldownManager;
     }
 }
