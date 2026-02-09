@@ -34,7 +34,7 @@ public final class Main extends JavaPlugin {
     private static Main instance;
     private static final int BSTATS_PLUGIN_ID = 24022;
     private WorldUtils worldUtils;
-    private ScheduledReset scheduldReset;
+    private ScheduledReset scheduledReset;
     private FileConfiguration languageConfig;
     private File languageFile;
     private String language;
@@ -109,8 +109,8 @@ public final class Main extends JavaPlugin {
             }
         }, 40L);
 
-        this.scheduldReset = new ScheduledReset(this, worldUtils);
-        this.scheduldReset.runTaskTimer(this, 20L, 20L);
+        this.scheduledReset = new ScheduledReset(this, worldUtils);
+        this.scheduledReset.runTaskTimer(this, 20L, 20L);
     }
 
     private void loadLanguageConfig() {
