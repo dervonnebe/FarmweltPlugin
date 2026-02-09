@@ -1,4 +1,4 @@
-package de.codingtt.farmweltplugin.utils;
+package top.jaxlabs.farmweltplugin.utils;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

@@ -1,6 +1,6 @@
-package de.codingtt.farmweltplugin.utils;
+package top.jaxlabs.farmweltplugin.utils;
 
-import de.codingtt.farmweltplugin.Main;
+import top.jaxlabs.farmweltplugin.Main;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.World;

@@ -1,17 +1,17 @@
-package de.codingtt.farmweltplugin.commands;
+package top.jaxlabs.farmweltplugin.commands;
 
-import de.codingtt.farmweltplugin.Main;
-import de.codingtt.farmweltplugin.utils.WorldUtils;
+import top.jaxlabs.farmweltplugin.Main;
+import top.jaxlabs.farmweltplugin.utils.WorldUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class NetherCommand implements CommandExecutor {
+public class EndCommand implements CommandExecutor {
     private final Main plugin;
     private final WorldUtils worldUtils;
 
-    public NetherCommand(Main plugin, WorldUtils worldUtils) {
+    public EndCommand(Main plugin, WorldUtils worldUtils) {
         this.plugin = plugin;
         this.worldUtils = worldUtils;
     }
@@ -28,17 +28,16 @@ public class NetherCommand implements CommandExecutor {
             return true;
         }
         
-        // Prüfe, ob die Nether-Welt aktiviert ist
-        if (!plugin.getConfig().getBoolean("menu.nether-world.enabled", false)) {
-            player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("nether-not-enabled"));
+        if (!plugin.getConfig().getBoolean("menu.end-world.enabled", false)) {
+            player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("end-not-enabled"));
             return true;
         }
 
-        if (worldUtils.worldExists(plugin.getNetherWorldName())) {
-            worldUtils.teleportToWorld(player, plugin.getNetherWorldName());
-            player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("nether-teleport"));
+        if (worldUtils.worldExists(plugin.getEndWorldName())) {
+            worldUtils.teleportToWorld(player, plugin.getEndWorldName());
+            player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("end-teleport"));
         } else {
-            player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("no-nether-world"));
+            player.sendMessage(plugin.getLanguageString("prefix") + plugin.getLanguageString("no-end-world"));
         }
         
         return true;

@@ -1,16 +1,16 @@
-package de.codingtt.farmweltplugin;
+package top.jaxlabs.farmweltplugin;
 
-import de.codingtt.farmweltplugin.commands.FarmweltCommand;
-import de.codingtt.farmweltplugin.commands.NetherCommand;
-import de.codingtt.farmweltplugin.commands.EndCommand;
-import de.codingtt.farmweltplugin.utils.FarmweltMenu;
-import de.codingtt.farmweltplugin.utils.FarmweltPlaceholders;
-import de.codingtt.farmweltplugin.utils.MenuListener;
-import de.codingtt.farmweltplugin.utils.ScheduledReset;
-import de.codingtt.farmweltplugin.utils.WorldUtils;
-import de.codingtt.farmweltplugin.utils.ConfigManager;
-import de.codingtt.farmweltplugin.utils.UpdateChecker;
-import de.codingtt.farmweltplugin.utils.CooldownManager;
+import top.jaxlabs.farmweltplugin.commands.FarmweltCommand;
+import top.jaxlabs.farmweltplugin.commands.NetherCommand;
+import top.jaxlabs.farmweltplugin.commands.EndCommand;
+import top.jaxlabs.farmweltplugin.utils.FarmweltMenu;
+import top.jaxlabs.farmweltplugin.utils.FarmweltPlaceholders;
+import top.jaxlabs.farmweltplugin.utils.MenuListener;
+import top.jaxlabs.farmweltplugin.utils.ScheduledReset;
+import top.jaxlabs.farmweltplugin.utils.WorldUtils;
+import top.jaxlabs.farmweltplugin.utils.ConfigManager;
+import top.jaxlabs.farmweltplugin.utils.UpdateChecker;
+import top.jaxlabs.farmweltplugin.utils.CooldownManager;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -34,7 +34,7 @@ public final class Main extends JavaPlugin {
     private static Main instance;
     private static final int BSTATS_PLUGIN_ID = 24022;
     private WorldUtils worldUtils;
-    private ScheduledReset scheduldReset;
+    private ScheduledReset scheduledReset;
     private FileConfiguration languageConfig;
     private File languageFile;
     private String language;
@@ -109,8 +109,8 @@ public final class Main extends JavaPlugin {
             }
         }, 40L);
 
-        this.scheduldReset = new ScheduledReset(this, worldUtils);
-        this.scheduldReset.runTaskTimer(this, 20L, 20L);
+        this.scheduledReset = new ScheduledReset(this, worldUtils);
+        this.scheduledReset.runTaskTimer(this, 20L, 20L);
     }
 
     private void loadLanguageConfig() {

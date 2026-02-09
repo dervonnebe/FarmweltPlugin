@@ -2,6 +2,8 @@
 
 Ein leistungsstarkes Spigot-Plugin für automatisch resettende Farmwelten. Ideal für Survival-Server, die eine separate, regelmäßig zurückgesetzte Welt für das Farmen von Ressourcen benötigen.
 
+**Offiziell entwickelt von JaxLabs** - Package: `top.jaxlabs.farmweltplugin`
+
 ## Features
 - 🌍 Separate Farmwelt mit zufälligem Teleport
 - ⏰ Automatische Reset-Zeitpläne (täglich, wöchentlich oder monatlich)
@@ -132,6 +134,22 @@ Beiträge sind willkommen! Wenn du Verbesserungen vornehmen möchtest:
 3. Committe deine Änderungen
 4. Pushe zum Branch
 5. Öffne einen Pull Request
+
+### Entwicklung / Build aus Quellcode
+Dieses Projekt verwendet Gradle als Build-System:
+
+```bash
+# Repository klonen
+git clone https://github.com/dervonnebe/FarmweltPlugin.git
+cd FarmweltPlugin
+
+# Projekt bauen
+./gradlew build
+
+# JAR-Datei wird erstellt in: build/libs/FarmweltPlugin-1.4.3.jar
+```
+
+Weitere Informationen zur Gradle-Migration findest du in [GRADLE_MIGRATION.md](GRADLE_MIGRATION.md)
 
 ## Statistiken
 Dieses Plugin verwendet bStats für anonyme Nutzungsstatistiken. Die Statistiken können [hier](https://bstats.org/plugin/bukkit/FarmworldPlugin/24022) eingesehen werden.

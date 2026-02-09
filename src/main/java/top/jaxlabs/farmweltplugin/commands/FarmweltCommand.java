@@ -1,8 +1,8 @@
-package de.codingtt.farmweltplugin.commands;
+package top.jaxlabs.farmweltplugin.commands;
 
-import de.codingtt.farmweltplugin.Main;
-import de.codingtt.farmweltplugin.utils.FarmweltMenu;
-import de.codingtt.farmweltplugin.utils.WorldUtils;
+import top.jaxlabs.farmweltplugin.Main;
+import top.jaxlabs.farmweltplugin.utils.FarmweltMenu;
+import top.jaxlabs.farmweltplugin.utils.WorldUtils;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

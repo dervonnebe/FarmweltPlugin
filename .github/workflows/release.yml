@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'pom.xml'
+      - 'build.gradle.kts'
   workflow_dispatch:
 
 jobs:
@@ -21,10 +21,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Extract version from pom.xml
+      - name: Extract version from build.gradle.kts
         id: version
         run: |
-          VERSION=$(grep "<version>" pom.xml | head -1 | sed "s/.*<version>\([^<]*\)<\/version>.*/\1/")
+          VERSION=$(grep "^version = " build.gradle.kts | sed "s/version = \"\(.*\)\"/\1/")
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "TAG=v$VERSION" >> $GITHUB_OUTPUT
           echo "Extracted version: $VERSION"
@@ -47,17 +47,21 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build with Maven
+      - name: Grant execute permission for gradlew
+        if: steps.check_tag.outputs.exists == 'false'
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
         if: steps.check_tag.outputs.exists == 'false'
         id: build
         continue-on-error: true
-        run: mvn clean package -DskipTests=true
+        run: ./gradlew clean build -x test
 
       - name: Capture build logs on failure
         if: steps.build.outcome == 'failure'
         id: build_logs
         run: |
-          LOGS=$(mvn clean package -DskipTests=true 2>&1 | tail -150)
+          LOGS=$(./gradlew clean build -x test 2>&1 | tail -150)
           echo "LOGS<<EOF" >> $GITHUB_OUTPUT
           echo "$LOGS" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -90,7 +94,7 @@ jobs:
             ### Actions Required
             1. Review the build errors above
             2. Fix the issues in the code
-            3. Update the version in \`pom.xml\` and push again
+            3. Update the version in \`build.gradle.kts\` and push again
 
             [View Workflow Run](${workflowUrl})
             `;
@@ -161,7 +165,7 @@ jobs:
         if: steps.check_tag.outputs.exists == 'false'
         uses: softprops/action-gh-release@v1
         with:
-          files: target/FarmweltPlugin-*.jar
+          files: build/libs/FarmweltPlugin-*.jar
           tag_name: ${{ steps.version.outputs.TAG }}
           name: FarmweltPlugin ${{ steps.version.outputs.TAG }}
           body: |

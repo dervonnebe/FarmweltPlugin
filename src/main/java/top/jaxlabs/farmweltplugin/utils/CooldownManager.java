@@ -1,4 +1,4 @@
-package de.codingtt.farmweltplugin.utils;
+package top.jaxlabs.farmweltplugin.utils;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
