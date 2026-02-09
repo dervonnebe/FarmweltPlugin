@@ -1,6 +1,8 @@
 # FarmweltPlugin
 The perfect solution for automatically resetting farm worlds in Minecraft
 
+**Officially developed by JaxLabs** - Package: `top.jaxlabs.farmweltplugin`
+
 [![German Version](https://img.shields.io/badge/German-Version-red.svg)](https://www.spigotmc.org/resources/farmworld-plugin.115930/)
 
 ## ⚡ Features

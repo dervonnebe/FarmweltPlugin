@@ -2,6 +2,8 @@
 
 Ein leistungsstarkes Spigot-Plugin für automatisch resettende Farmwelten. Ideal für Survival-Server, die eine separate, regelmäßig zurückgesetzte Welt für das Farmen von Ressourcen benötigen.
 
+**Offiziell entwickelt von JaxLabs** - Package: `top.jaxlabs.farmweltplugin`
+
 ## Features
 - 🌍 Separate Farmwelt mit zufälligem Teleport
 - ⏰ Automatische Reset-Zeitpläne (täglich, wöchentlich oder monatlich)

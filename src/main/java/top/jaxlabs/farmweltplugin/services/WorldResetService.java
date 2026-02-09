@@ -1,6 +1,6 @@
-package de.codingtt.farmweltplugin.services;
+package top.jaxlabs.farmweltplugin.services;
 
-import de.codingtt.farmweltplugin.Main;
+import top.jaxlabs.farmweltplugin.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.mvplugins.multiverse.core.MultiverseCoreApi;
