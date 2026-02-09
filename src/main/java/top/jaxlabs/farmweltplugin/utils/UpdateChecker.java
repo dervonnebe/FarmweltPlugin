@@ -43,7 +43,11 @@ public class UpdateChecker implements Listener {
                     
                     String currentVersion = plugin.getDescription().getVersion();
                     
-                    if (!currentVersion.equalsIgnoreCase(latestVersion)) {
+                    // Normalize versions by removing "v" prefix for comparison
+                    String normalizedCurrent = currentVersion.toLowerCase().replaceFirst("^v", "");
+                    String normalizedLatest = latestVersion.toLowerCase().replaceFirst("^v", "");
+                    
+                    if (!normalizedCurrent.equals(normalizedLatest)) {
                         updateAvailable = true;
                         plugin.getLogger().info("--------------------------------------------------");
                         plugin.getLogger().info("A new version of FarmweltPlugin is available!");
