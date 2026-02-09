@@ -81,6 +81,22 @@ https://bstats.org/plugin/bukkit/FarmworldPlugin/24022
 • Discord: dervonnebe
 • https://github.com/dervonnebe/FarmweltPlugin/issues
 
+## 🔧 Development / Building from Source
+This project uses Gradle as its build system:
+
+```bash
+# Clone the repository
+git clone https://github.com/dervonnebe/FarmweltPlugin.git
+cd FarmweltPlugin
+
+# Build the project
+./gradlew build
+
+# JAR file will be created at: build/libs/FarmweltPlugin-1.4.3.jar
+```
+
+For more information about the Gradle migration, see [GRADLE_MIGRATION.md](GRADLE_MIGRATION.md)
+
 ## ⭐ Ratings
 If you like the plugin, please leave a positive rating!
 
