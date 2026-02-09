@@ -44,8 +44,8 @@ public class UpdateChecker implements Listener {
                     String currentVersion = plugin.getDescription().getVersion();
                     
                     // Normalize versions by removing "v" prefix for comparison
-                    String normalizedCurrent = currentVersion.toLowerCase().replaceFirst("^v", "");
-                    String normalizedLatest = latestVersion.toLowerCase().replaceFirst("^v", "");
+                    String normalizedCurrent = normalizeVersion(currentVersion);
+                    String normalizedLatest = normalizeVersion(latestVersion);
                     
                     if (!normalizedCurrent.equals(normalizedLatest)) {
                         updateAvailable = true;
@@ -80,5 +80,20 @@ public class UpdateChecker implements Listener {
              player.sendMessage(ChatColor.GREEN + "Download: " + ChatColor.UNDERLINE + "https://github.com/dervonnebe/FarmweltPlugin/releases/latest");
              player.sendMessage(ChatColor.GRAY + "--------------------------------------------------");
         }
+    }
+    
+    /**
+     * Normalizes a version string by removing the "v" prefix and converting to lowercase.
+     * This ensures consistent version comparison regardless of prefix format.
+     * 
+     * @param version The version string to normalize (e.g., "v1.4.4" or "1.4.4")
+     * @return The normalized version string (e.g., "1.4.4")
+     */
+    private String normalizeVersion(String version) {
+        if (version == null) {
+            return "";
+        }
+        String normalized = version.toLowerCase().trim();
+        return normalized.startsWith("v") ? normalized.substring(1) : normalized;
     }
 }
