@@ -146,7 +146,7 @@ cd FarmweltPlugin
 # Projekt bauen
 ./gradlew build
 
-# JAR-Datei wird erstellt in: build/libs/FarmweltPlugin-1.4.3.jar
+# JAR-Datei wird erstellt in: build/libs/FarmweltPlugin-X.X.X.jar
 ```
 
 Weitere Informationen zur Gradle-Migration findest du in [GRADLE_MIGRATION.md](GRADLE_MIGRATION.md)
